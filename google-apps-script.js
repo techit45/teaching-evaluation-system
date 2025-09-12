@@ -701,7 +701,7 @@ function validateCourseData(courseData) {
   }
   
   if (courseData.category) {
-    const validCategories = ['programming', 'electronics', 'design', 'business', 'language', 'other'];
+    const validCategories = ['junior', 'senior'];
     if (!validCategories.includes(courseData.category)) {
       errors.push('Invalid category. Must be one of: ' + validCategories.join(', '));
     }
