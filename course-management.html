@@ -1125,7 +1125,7 @@
         // Start evaluation for a course
         function startEvaluation(courseCode, courseName) {
             const currentURL = window.location.origin + window.location.pathname;
-            const baseURL = currentURL.replace('course-management.html', 'obsolete-files/student-evaluation-single.html');
+            const baseURL = currentURL.replace('course-management.html', 'student-evaluation.html');
             const evaluationURL = `${baseURL}?courseId=${encodeURIComponent(courseCode)}&courseName=${encodeURIComponent(courseName)}`;
             
             // Open evaluation page
@@ -1135,7 +1135,7 @@
         // QR Code functions
         function showCourseQR(courseCode, courseName) {
             const currentURL = window.location.origin + window.location.pathname;
-            const baseURL = currentURL.replace('course-management.html', 'obsolete-files/student-evaluation-single.html');
+            const baseURL = currentURL.replace('course-management.html', 'student-evaluation.html');
             const evaluationURL = `${baseURL}?courseId=${encodeURIComponent(courseCode)}`;
             
             // Update modal content
