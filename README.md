@@ -1,6 +1,6 @@
 # 🎓 Teaching Evaluation Management System
 
-[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/Loin-learning/teaching-evaluation-system)
+[![Version](https://img.shields.io/badge/version-3.0.0-blue.svg)](https://github.com/techit45/teaching-evaluation-system)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen.svg)](README.md)
 
