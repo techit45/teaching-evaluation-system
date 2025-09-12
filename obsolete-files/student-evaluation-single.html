@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>แบบประเมินการสอน - Single Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="../config.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700;800&display=swap');
+    
+    :root {
+      --primary-color: #667eea;
+      --primary-dark: #5a67d8;
+      --secondary-color: #764ba2;
+      --accent-color: #f093fb;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --text-dark: #1a202c;
+      --text-light: #718096;
+      --text-muted: #a0aec0;
+      --bg-light: #f7fafc;
+      --bg-white: #ffffff;
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.15);
+      --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+      --border-radius: 16px;
+      --border-radius-lg: 20px;
+      --border-radius-xl: 24px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body { 
+      font-family: 'Kanit', sans-serif; 
+      background: linear-gradient(-45deg, var(--primary-color), var(--secondary-color), var(--accent-color), #f5576c, #4facfe, #00f2fe);
+      background-size: 400% 400%;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+      animation: gradientShift 15s ease infinite;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* Enhanced floating background effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(240, 147, 251, 0.2) 0%, transparent 50%);
+      animation: float 20s ease-in-out infinite;
+      z-index: -1;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-30px) rotate(1deg); }
+      66% { transform: translateY(-20px) rotate(-1deg); }
+    }
+    
+    .container { 
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 2.5rem;
+      border-radius: var(--border-radius-xl);
+      max-width: 900px;
+      width: 95%;
+      box-shadow: var(--shadow-xl);
+      position: relative;
+      z-index: 1;
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow: hidden;
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(45deg, transparent 45%, rgba(102, 126, 234, 0.03) 50%, transparent 55%),
+        linear-gradient(-45deg, transparent 45%, rgba(240, 147, 251, 0.03) 50%, transparent 55%);
+      background-size: 60px 60px;
+      animation: subtleMove 30s linear infinite;
+      z-index: -1;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes subtleMove {
+      0% { background-position: 0px 0px, 0px 0px; }
+      100% { background-position: 60px 60px, -60px 60px; }
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+    
+    .logo {
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      animation: logoFloat 3s ease-in-out infinite;
+      position: relative;
+      transition: var(--transition);
+    }
+    
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: var(--border-radius-lg);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    
+    .logo:hover {
+      transform: translateY(-5px) scale(1.05);
+    }
+    
+    .logo:hover img {
+      box-shadow: 0 25px 50px rgba(102, 126, 234, 0.3);
+    }
+    
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    
+    .header h1 {
+      color: var(--text-dark);
+      font-size: clamp(1.8rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--text-dark), var(--primary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+    
+    .course-name {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      font-weight: 400;
+      opacity: 0.9;
+    }
+    
+    .form-section {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-bounce);
+      animation: fadeInUp 0.6s ease-out forwards;
+      animation-delay: calc(var(--delay) * 0.1s);
+    }
+    
+    .form-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.6s;
+    }
+    
+    .form-section:hover::before {
+      left: 100%;
+    }
+    
+    .form-section:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(102, 126, 234, 0.2);
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .section-title {
+      color: var(--text-dark);
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+      position: relative;
+    }
+    
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      border-radius: 2px;
+    }
+    
+    .section-title i {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--bg-white);
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      transition: var(--transition);
+    }
+    
+    .section-title:hover i {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    
+    .form-group label {
+      display: block;
+      color: var(--text-dark);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .form-group:hover label {
+      color: var(--primary-color);
+    }
+    
+    .form-group select {
+      width: 100%;
+      padding: 1rem 1.25rem;
+      border: 2px solid rgba(102, 126, 234, 0.1);
+      border-radius: 12px;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      font-size: 1rem;
+      font-family: inherit;
+      font-weight: 400;
+      transition: var(--transition-bounce);
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23667eea' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 1rem center;
+      background-repeat: no-repeat;
+      background-size: 1.25em 1.25em;
+      padding-right: 3rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
+    
+    .form-group select:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+    
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(102, 126, 234, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .form-group select:focus + .form-focus-indicator {
+      opacity: 1;
+      transform: scaleX(1);
+    }
+    
+    .instructor-display {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--success-color);
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+      display: none;
+      animation: instructorSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .instructor-display::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.1), transparent);
+      animation: shimmer 2s ease-in-out infinite;
+    }
+    
+    @keyframes instructorSlideIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.95);
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .instructor-name {
+      font-weight: 600;
+      color: var(--success-color);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .instructor-name i {
+      background: linear-gradient(135deg, var(--success-color), #059669);
+      color: var(--bg-white);
+      padding: 8px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+    
+    .instructor-info {
+      font-size: 0.95rem;
+      color: #059669;
+      opacity: 0.9;
+      font-weight: 400;
+    }
+    
+    .rating-grid {
+      display: grid;
+      gap: 2rem;
+    }
+    
+    .rating-item {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: var(--shadow);
+      transition: var(--transition-bounce);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .rating-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.6s;
+    }
+    
+    .rating-item:hover::before {
+      left: 100%;
+    }
+    
+    .rating-item:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-hover);
+      border-color: rgba(102, 126, 234, 0.2);
+    }
+    
+    .rating-question {
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      text-align: center;
+    }
+    
+    .rating-options {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .rating-button {
+      width: 55px;
+      height: 55px;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      border-radius: 14px;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+    
+    .rating-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+      transition: left 0.4s;
+    }
+    
+    .rating-button:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
+      color: var(--primary-color);
+    }
+    
+    .rating-button:hover::before {
+      left: 100%;
+    }
+    
+    .rating-button.selected {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-color: var(--primary-color);
+      color: var(--bg-white);
+      transform: translateY(-3px) scale(1.1);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+    
+    .rating-button.selected::after {
+      content: '✓';
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 20px;
+      height: 20px;
+      background: var(--success-color);
+      color: white;
+      border-radius: 50%;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: checkmark 0.3s ease-out;
+    }
+    
+    @keyframes checkmark {
+      from { transform: scale(0); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    .rating-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      margin-top: 1rem;
+      padding: 0 0.5rem;
+      font-weight: 400;
+    }
+    
+    .comment-section textarea {
+      width: 100%;
+      min-height: 140px;
+      padding: 1.25rem;
+      border: 2px solid rgba(102, 126, 234, 0.1);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text-dark);
+      background: var(--bg-white);
+      resize: vertical;
+      transition: var(--transition-bounce);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      line-height: 1.6;
+    }
+    
+    .comment-section textarea:hover {
+      border-color: var(--primary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+    
+    .comment-section textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1), 0 4px 12px rgba(102, 126, 234, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .comment-section textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+    
+    .submit-section {
+      text-align: center;
+      margin-top: 2.5rem;
+      animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+    
+    .btn {
+      padding: 1.25rem 2.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: var(--transition-bounce);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: var(--bg-white);
+      box-shadow: var(--shadow);
+      min-width: 220px;
+      text-transform: none;
+      letter-spacing: 0.5px;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+    }
+    
+    .btn:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: var(--shadow) !important;
+      background: linear-gradient(135deg, var(--text-light), var(--text-muted));
+    }
+    
+    .btn i {
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    
+    .btn:hover i {
+      transform: translateX(2px);
+    }
+    
+    .success-screen {
+      text-align: center;
+      display: none;
+      animation: successPop 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 2rem;
+    }
+    
+    @keyframes successPop {
+      0% { 
+        opacity: 0; 
+        transform: scale(0.8) translateY(20px); 
+      }
+      50% { 
+        transform: scale(1.05) translateY(-5px); 
+      }
+      100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+      }
+    }
+    
+    .success-icon {
+      font-size: 5rem;
+      margin-bottom: 2rem;
+      animation: bounce 1.2s ease-out;
+      filter: drop-shadow(0 4px 12px rgba(16, 185, 129, 0.3));
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      10% { transform: translateY(-8px); }
+      40% { transform: translateY(-25px); }
+      60% { transform: translateY(-12px); }
+    }
+    
+    .success-text {
+      color: var(--text-dark);
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--text-dark), var(--success-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .success-subtext {
+      color: var(--text-light);
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .countdown {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--warning-color);
+      color: #92400e;
+      padding: 1.25rem;
+      border-radius: var(--border-radius);
+      font-weight: 500;
+      margin: 1.5rem auto;
+      max-width: 300px;
+      box-shadow: 0 4px 20px rgba(245, 158, 11, 0.15);
+    }
+    
+    .error-message {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+      backdrop-filter: blur(10px);
+      color: var(--error-color);
+      border: 2px solid var(--error-color);
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+      display: none;
+      text-align: center;
+      font-weight: 500;
+      animation: shake 0.6s ease-in-out;
+      box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);
+      line-height: 1.5;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+      20%, 40%, 60%, 80% { transform: translateX(8px); }
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      color: var(--primary-color);
+      font-size: 1.2rem;
+      margin: 2rem 0;
+      padding: 1.5rem;
+      background: rgba(102, 126, 234, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: var(--border-radius);
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+      font-weight: 500;
+    }
+    
+    .loading i {
+      animation: spin 1.5s linear infinite;
+      margin-right: 0.75rem;
+      font-size: 1.3rem;
+      filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+    }
+    
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+      
+      .container {
+        padding: 1.5rem;
+        margin: 0;
+        max-width: 100%;
+        border-radius: var(--border-radius);
+      }
+      
+      .header h1 {
+        font-size: clamp(1.5rem, 6vw, 1.8rem);
+        margin-bottom: 0.5rem;
+      }
+      
+      .course-name {
+        font-size: 1rem;
+      }
+      
+      .logo {
+        width: 70px;
+        height: 70px;
+        margin-bottom: 1rem;
+      }
+      
+      
+      .form-section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      
+      .section-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+      
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .rating-options {
+        gap: 0.75rem;
+        justify-content: space-between;
+        max-width: 300px;
+        margin: 1rem auto;
+      }
+      
+      .rating-button {
+        width: 48px;
+        height: 48px;
+        font-size: 1.1rem;
+      }
+      
+      .rating-labels {
+        font-size: 0.7rem;
+        padding: 0;
+      }
+      
+      .comment-section textarea {
+        min-height: 120px;
+        padding: 1rem;
+        font-size: 0.95rem;
+      }
+      
+      .btn {
+        min-width: auto;
+        width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
+      }
+      
+      .success-text {
+        font-size: 1.5rem;
+      }
+      
+      .success-subtext {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+      }
+      
+      .loading {
+        margin: 1.5rem 0;
+        padding: 1.25rem;
+        font-size: 1.1rem;
+      }
+      
+      .error-message {
+        margin: 1rem 0;
+        padding: 1rem;
+        font-size: 0.95rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+      
+      .form-section {
+        padding: 1.25rem;
+      }
+      
+      .rating-options {
+        max-width: 280px;
+        gap: 0.5rem;
+      }
+      
+      .rating-button {
+        width: 44px;
+        height: 44px;
+        font-size: 1rem;
+        /* Improve touch targets */
+        min-height: 44px;
+        min-width: 44px;
+        touch-action: manipulation;
+      }
+      
+      .btn {
+        padding: 0.875rem 1.25rem;
+        min-height: 48px;
+        touch-action: manipulation;
+      }
+      
+      select, textarea {
+        min-height: 44px;
+        touch-action: manipulation;
+      }
+      
+      /* Prevent zoom on input focus in iOS */
+      select, textarea {
+        font-size: 16px !important;
+      }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">
+        <img src="../Logo.png" alt="Company Logo" onerror="this.style.display='none'">
+      </div>
+      <h1>แบบประเมินการสอน <span id="course-name">Power Supply</span></h1>
+      <div class="course-name">ระบบประเมินคุณภาพการสอนออนไลน์</div>
+    </div>
+
+      <form id="evaluation-form">
+      <!-- Basic Information Section -->
+      <div class="form-section" style="--delay: 1">
+        <div class="section-title">
+          <i class="fas fa-info-circle"></i>
+          ข้อมูลพื้นฐาน
+        </div>
+        
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="center">ศูนย์ฝึกอบรม</label>
+            <select id="center" name="center" required>
+              <option value="">เลือกศูนย์</option>
+              <option value="ลาดกระบัง">ลาดกระบัง</option>
+              <option value="บางพลัด">บางพลัด</option>
+              <option value="ศรีราชา">ศรีราชา</option>
+              <option value="ระยอง">ระยอง</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="week">สัปดาห์ที่</label>
+            <select id="week" name="week" required>
+              <option value="">เลือกสัปดาห์</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="day">วัน</label>
+            <select id="day" name="day" required>
+              <option value="">เลือกวัน</option>
+              <option value="เสาร์">เสาร์</option>
+              <option value="อาทิตย์">อาทิตย์</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="period">ช่วงเวลาเรียน</label>
+            <select id="period" name="period" required>
+              <option value="">เลือกช่วงเวลา</option>
+              <option value="08:00-12:00">เช้า (08:00-12:00)</option>
+              <option value="13:00-17:00">บ่าย (13:00-17:00)</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Instructor Display -->
+        <div class="instructor-display" id="instructorDisplay">
+          <div class="instructor-name">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span id="instructorName">วิทยากรหลัก: กรุณาเลือกข้อมูลให้ครบถ้วน</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating Section -->
+      <div class="form-section" style="--delay: 2">
+        <div class="section-title">
+          <i class="fas fa-star"></i>
+          ประเมินคุณภาพการสอน
+        </div>
+        
+        <div class="rating-grid">
+          <!-- Rating 1: Clarity -->
+          <div class="rating-item">
+            <div class="rating-question">1. ความชัดเจนในการอธิบาย <span class="course-name-text">Power Supply</span></div>
+            <div class="rating-options">
+              <div class="rating-button" data-rating="clarity" data-value="1">1</div>
+              <div class="rating-button" data-rating="clarity" data-value="2">2</div>
+              <div class="rating-button" data-rating="clarity" data-value="3">3</div>
+              <div class="rating-button" data-rating="clarity" data-value="4">4</div>
+              <div class="rating-button" data-rating="clarity" data-value="5">5</div>
+            </div>
+            <div class="rating-labels">
+              <span>น้อยที่สุด</span>
+              <span>น้อย</span>
+              <span>ปานกลาง</span>
+              <span>มาก</span>
+              <span>มากที่สุด</span>
+            </div>
+          </div>
+
+          <!-- Rating 2: Preparation -->
+          <div class="rating-item">
+            <div class="rating-question">2. การเตรียมอุปกรณ์และเครื่องมือประสบการณ์</div>
+            <div class="rating-options">
+              <div class="rating-button" data-rating="preparation" data-value="1">1</div>
+              <div class="rating-button" data-rating="preparation" data-value="2">2</div>
+              <div class="rating-button" data-rating="preparation" data-value="3">3</div>
+              <div class="rating-button" data-rating="preparation" data-value="4">4</div>
+              <div class="rating-button" data-rating="preparation" data-value="5">5</div>
+            </div>
+            <div class="rating-labels">
+              <span>น้อยที่สุด</span>
+              <span>น้อย</span>
+              <span>ปานกลาง</span>
+              <span>มาก</span>
+              <span>มากที่สุด</span>
+            </div>
+          </div>
+
+          <!-- Rating 3: Interaction -->
+          <div class="rating-item">
+            <div class="rating-question">3. การตอบคำถามและแลกเปลี่ยนประสบการณ์</div>
+            <div class="rating-options">
+              <div class="rating-button" data-rating="interaction" data-value="1">1</div>
+              <div class="rating-button" data-rating="interaction" data-value="2">2</div>
+              <div class="rating-button" data-rating="interaction" data-value="3">3</div>
+              <div class="rating-button" data-rating="interaction" data-value="4">4</div>
+              <div class="rating-button" data-rating="interaction" data-value="5">5</div>
+            </div>
+            <div class="rating-labels">
+              <span>น้อยที่สุด</span>
+              <span>น้อย</span>
+              <span>ปานกลาง</span>
+              <span>มาก</span>
+              <span>มากที่สุด</span>
+            </div>
+          </div>
+
+          <!-- Rating 4: Punctuality -->
+          <div class="rating-item">
+            <div class="rating-question">4. การตรงต่อเวลาและบริหารเวลา</div>
+            <div class="rating-options">
+              <div class="rating-button" data-rating="punctuality" data-value="1">1</div>
+              <div class="rating-button" data-rating="punctuality" data-value="2">2</div>
+              <div class="rating-button" data-rating="punctuality" data-value="3">3</div>
+              <div class="rating-button" data-rating="punctuality" data-value="4">4</div>
+              <div class="rating-button" data-rating="punctuality" data-value="5">5</div>
+            </div>
+            <div class="rating-labels">
+              <span>น้อยที่สุด</span>
+              <span>น้อย</span>
+              <span>ปานกลาง</span>
+              <span>มาก</span>
+              <span>มากที่สุด</span>
+            </div>
+          </div>
+
+          <!-- Rating 5: Satisfaction -->
+          <div class="rating-item">
+            <div class="rating-question">5. ความพึงพอใจโดยรวมกับ <span class="course-name-text">Power Supply</span> Course</div>
+            <div class="rating-options">
+              <div class="rating-button" data-rating="satisfaction" data-value="1">1</div>
+              <div class="rating-button" data-rating="satisfaction" data-value="2">2</div>
+              <div class="rating-button" data-rating="satisfaction" data-value="3">3</div>
+              <div class="rating-button" data-rating="satisfaction" data-value="4">4</div>
+              <div class="rating-button" data-rating="satisfaction" data-value="5">5</div>
+            </div>
+            <div class="rating-labels">
+              <span>น้อยที่สุด</span>
+              <span>น้อย</span>
+              <span>ปานกลาง</span>
+              <span>มาก</span>
+              <span>มากที่สุด</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comment Section -->
+      <div class="form-section comment-section" style="--delay: 3">
+        <div class="section-title">
+          <i class="fas fa-comment-alt"></i>
+          ข้อเสนอแนะเพิ่มเติม (ไม่บังคับ)
+        </div>
+        <textarea id="comment" name="comment" placeholder="แสดงความคิดเห็นเกี่ยวกับเนื้อหา Power Supply, การใช้งาน, หรือข้อเสนอแนะปรับปรุง..."></textarea>
+      </div>
+
+      <div class="loading" id="loading">
+        <i class="fas fa-spinner"></i> กำลังส่งแบบประเมิน...
+      </div>
+
+      <div class="error-message" id="errorMessage">
+        <i class="fas fa-exclamation-triangle"></i> <span id="errorText">เกิดข้อผิดพลาด</span>
+      </div>
+
+      <div class="submit-section">
+        <button type="submit" class="btn" id="submitBtn">
+          <i class="fas fa-paper-plane"></i> ส่งแบบประเมิน <span class="course-name-text">Power Supply</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Success Screen -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✅</div>
+      <div class="success-text">ส่งแบบประเมิน <span class="course-name-text">Power Supply</span> สำเร็จ!</div>
+      <div class="success-subtext">ขอบคุณสำหรับการประเมิน การประเมินของคุณจะช่วยพัฒนาคุณภาพการสอน</div>
+      <div class="countdown" id="countdown">หน้าต่างจะปิดใน <span id="countdownTimer">5</span> วินาที</div>
+      <button class="btn" onclick="resetForm()">
+        <i class="fas fa-redo"></i> ประเมินหลักสูตรอื่น
+      </button>
+    </div>
+  </div>
+
+  <script>
+// 🔧 CONFIGURATION - Multi-Course Evaluation System
+// Load configuration from global config file
+const CONFIG = window.EVALUATION_SYSTEM_CONFIG || {
+  VERSION: '3.0.0',
+  API_URL: 'https://script.google.com/macros/s/AKfycbzxNwg2M8saVUaxOBvTjzE5WpRPtJ1NIOuy4pKUHSTL3wHMB_tDkxeWIzwBHeQmsg/exec',
+  COURSE_STORAGE_KEY: 'teaching_evaluation_courses'
+};
+
+// Get course info from URL
+const urlParams = new URLSearchParams(window.location.search);
+const courseId = urlParams.get('courseId');
+const courseName = urlParams.get('courseName') || 'Power Supply';
+
+// State variables
+let ratings = {};
+let instructorsData = [];
+
+
+// Initialize system
+document.addEventListener('DOMContentLoaded', async function() {
+  console.log('🎓 Single Page Multi-Course Evaluation System Initialized');
+  console.log('Course:', courseName, 'ID:', courseId);
+  
+  // Update course name in UI
+  updateCourseName();
+  
+  // Load instructor data
+  await loadInstructors();
+  
+  // Add event listeners
+  document.getElementById('center').addEventListener('change', updateInstructor);
+  document.getElementById('week').addEventListener('change', updateInstructor);
+  document.getElementById('day').addEventListener('change', updateInstructor);
+  document.getElementById('period').addEventListener('change', updateInstructor);
+  
+  // Add rating button listeners
+  const ratingButtons = document.querySelectorAll('.rating-button');
+  console.log('Found rating buttons:', ratingButtons.length);
+  
+  ratingButtons.forEach((button, index) => {
+    console.log(`Button ${index}:`, button.dataset.rating, button.dataset.value);
+    button.addEventListener('click', function() {
+      console.log('Rating button clicked:', this.dataset.rating, this.dataset.value);
+      selectRating(this.dataset.rating, this.dataset.value);
+    });
+  });
+  
+  // Form submission
+  document.getElementById('evaluation-form').addEventListener('submit', handleSubmit);
+  
+  // Auto-save functionality
+  document.addEventListener('change', saveDraft);
+  
+  // Load saved draft
+  loadDraft();
+});
+
+// Update course name in all UI elements
+function updateCourseName() {
+  document.getElementById('course-name').textContent = courseName;
+  document.querySelector('title').textContent = `แบบประเมินการสอน - ${courseName}`;
+  
+  // Update all course name placeholders
+  document.querySelectorAll('.course-name-text').forEach(el => {
+    el.textContent = courseName;
+  });
+  
+  // Update comment placeholder
+  document.getElementById('comment').placeholder = 
+    `แสดงความคิดเห็นเกี่ยวกับเนื้อหา ${courseName}, การใช้งาน, หรือข้อเสนอแนะปรับปรุง...`;
+}
+
+// Load instructor data from server
+async function loadInstructors() {
+  try {
+    console.log('📚 Loading instructors...');
+    
+    const url = courseId 
+      ? `${CONFIG.API_URL}?action=getInstructors&courseId=${courseId}`
+      : `${CONFIG.API_URL}?action=getInstructors`;
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      throw new Error(`ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ (${response.status})`);
+    }
+    
+    const data = await response.json();
+    console.log('👨‍🏫 Instructors response:', data);
+    
+    if (data.status === 'success') {
+      instructorsData = data.data.instructors || [];
+      console.log(`✅ Loaded ${instructorsData.length} instructor records`);
+    } else {
+      console.error('❌ Failed to load instructors:', data.error);
+    }
+  } catch (error) {
+    console.error('❌ Error loading instructors:', error);
+  }
+}
+
+// Update instructor display based on selections
+// Convert time format for matching
+function convertPeriodForMatching(period) {
+  const periodMap = {
+    '08:00-12:00': 'เช้า',
+    '13:00-17:00': 'บ่าย',
+    'เช้า': 'เช้า',
+    'บ่าย': 'บ่าย'
+  };
+  return periodMap[period] || period;
+}
+
+function updateInstructor() {
+  const center = document.getElementById('center').value;
+  const week = document.getElementById('week').value;
+  const day = document.getElementById('day').value;
+  const period = document.getElementById('period').value;
+  
+  const instructorDisplay = document.getElementById('instructorDisplay');
+  const instructorName = document.getElementById('instructorName');
+  
+  if (center && week && day && period) {
+    // Convert period format for matching with sheet data
+    const periodForMatching = convertPeriodForMatching(period);
+    console.log('🔍 Searching for instructor:', { center, week, day, period, periodForMatching });
+    
+    // Find matching instructor
+    const matchingRecord = instructorsData.find(record => 
+      record.ศูนย์ === center &&
+      record.สัปดาห์ == week &&
+      record.วัน === day &&
+      record.ช่วงเวลา === periodForMatching
+    );
+    
+    console.log('📊 Available instructor records:', instructorsData.length);
+    console.log('🎯 Matching record found:', matchingRecord);
+    
+    if (matchingRecord) {
+      const instructor1 = matchingRecord.ผู้สอน1 || '';
+      const instructor2 = matchingRecord.ผู้สอน2 || '';
+      
+      let instructorText = 'วิทยากรหลัก: ' + instructor1;
+      if (instructor2) {
+        instructorText += ` และ ${instructor2}`;
+      }
+      
+      instructorName.textContent = instructorText;
+      console.log('👨‍🏫 Found instructors:', instructorText);
+    } else {
+      instructorName.textContent = 'วิทยากรหลัก: ไม่พบข้อมูลผู้สอน';
+      console.log('❌ No instructors found for selected criteria');
+    }
+    
+    instructorDisplay.style.display = 'block';
+  } else {
+    instructorDisplay.style.display = 'none';
+    instructorName.textContent = 'วิทยากรหลัก: กรุณาเลือกข้อมูลให้ครบถ้วน';
+  }
+}
+
+// Select rating value
+function selectRating(ratingType, value) {
+  console.log('selectRating called:', ratingType, value);
+  ratings[ratingType] = parseInt(value);
+  console.log('Updated ratings object:', ratings);
+  
+  // Update UI - remove selected class from all buttons of this rating type
+  const buttonsToUnselect = document.querySelectorAll(`[data-rating="${ratingType}"]`);
+  console.log('Buttons to unselect:', buttonsToUnselect.length);
+  buttonsToUnselect.forEach(button => {
+    button.classList.remove('selected');
+  });
+  
+  // Add selected class to clicked button
+  const buttonToSelect = document.querySelector(`[data-rating="${ratingType}"][data-value="${value}"]`);
+  console.log('Button to select:', buttonToSelect);
+  if (buttonToSelect) {
+    buttonToSelect.classList.add('selected');
+    console.log('Added selected class to button');
+  } else {
+    console.error('Could not find button to select!');
+  }
+  
+  hideError();
+}
+
+// Handle form submission
+async function handleSubmit(event) {
+  event.preventDefault();
+  
+  if (!validateForm()) {
+    return;
+  }
+  
+  const formData = collectFormData();
+  console.log('📝 Submitting evaluation:', formData);
+  
+  // Check for duplicate submission
+  const submissionKey = `${formData.center}_${formData.week}_${formData.day}_${formData.period}_${courseId || 'default'}`;
+  const submitted = localStorage.getItem('evaluation_submitted_' + submissionKey);
+  
+  if (submitted) {
+    showError('คุณได้ทำการประเมินช่วงเวลานี้แล้ว');
+    return;
+  }
+  
+  showLoading();
+  
+  try {
+    const response = await fetch(CONFIG.API_URL, {
+      method: 'POST',
+      redirect: 'follow',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        action: 'submitEvaluation',
+        data: formData
+      })
+    });
+    
+    console.log('Raw response status:', response.status);
+    console.log('Raw response ok:', response.ok);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Response error text:', errorText);
+      throw new Error(`HTTP error! status: ${response.status}, text: ${errorText}`);
+    }
+    
+    const responseText = await response.text();
+    console.log('Raw response text:', responseText);
+    
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      throw new Error('Invalid JSON response: ' + responseText.substring(0, 200));
+    }
+    
+    console.log('📤 Submit response:', data);
+    
+    if (data.status === 'success') {
+      // Mark as submitted
+      localStorage.setItem('evaluation_submitted_' + submissionKey, 'true');
+      
+      // Clear draft
+      localStorage.removeItem(`evaluation_draft_${courseId || 'default'}`);
+      
+      showSuccess();
+    } else {
+      // Handle error object properly
+      let errorMessage = 'Unknown error';
+      if (typeof data.error === 'object') {
+        errorMessage = data.error.message || JSON.stringify(data.error);
+      } else if (typeof data.error === 'string') {
+        errorMessage = data.error;
+      }
+      console.error('API Error Details:', data);
+      throw new Error(errorMessage);
+    }
+    
+  } catch (error) {
+    console.error('❌ Submit error:', error);
+    console.error('Error type:', typeof error);
+    console.error('Error object:', error);
+    
+    let displayMessage = 'เกิดข้อผิดพลาดในการส่งแบบประเมิน';
+    
+    if (error.message) {
+      displayMessage += ': ' + error.message;
+    } else if (typeof error === 'string') {
+      displayMessage += ': ' + error;
+    } else {
+      displayMessage += ': ' + JSON.stringify(error);
+    }
+    
+    showError(displayMessage);
+  } finally {
+    hideLoading();
+  }
+}
+
+// Validate form
+function validateForm() {
+  const errors = [];
+  
+  // Required fields validation with detailed checks
+  const requiredFields = [
+    { id: 'center', name: 'ศูนย์การศึกษา', minLength: 2 },
+    { id: 'week', name: 'สัปดาห์ที่', type: 'number', min: 1, max: 52 },
+    { id: 'day', name: 'วัน' },
+    { id: 'period', name: 'ช่วงเวลา' }
+  ];
+  
+  for (let field of requiredFields) {
+    const element = document.getElementById(field.id);
+    const value = element.value.trim();
+    
+    if (!value) {
+      errors.push(`กรุณากรอก${field.name}`);
+      continue;
+    }
+    
+    // Type-specific validation
+    if (field.type === 'number') {
+      const numValue = parseInt(value);
+      if (isNaN(numValue)) {
+        errors.push(`${field.name}ต้องเป็นตัวเลข`);
+      } else {
+        if (field.min && numValue < field.min) {
+          errors.push(`${field.name}ต้องมากกว่าหรือเท่ากับ ${field.min}`);
+        }
+        if (field.max && numValue > field.max) {
+          errors.push(`${field.name}ต้องน้อยกว่าหรือเท่ากับ ${field.max}`);
+        }
+      }
+    }
+    
+    // Length validation
+    if (field.minLength && value.length < field.minLength) {
+      errors.push(`${field.name}ต้องมีอย่างน้อย ${field.minLength} ตัวอักษร`);
+    }
+  }
+  
+  // Instructor validation
+  const instructorName = document.getElementById('instructorName').textContent;
+  if (!instructorName || 
+      instructorName.includes('กรุณาเลือกข้อมูล') || 
+      instructorName.includes('ไม่พบข้อมูลผู้สอน') ||
+      instructorName === 'วิทยากรหลัก: กรุณาเลือกข้อมูลให้ครบถ้วน') {
+    errors.push('กรุณาเลือกข้อมูลพื้นฐานให้ครบถ้วนเพื่อแสดงผู้สอน');
+  } else if (instructorName.length < 10) {
+    errors.push('กรุณาตรวจสอบการเลือกข้อมูลผู้สอน');
+  }
+  
+  // Ratings validation
+  const ratingTypes = [
+    { key: 'clarity', name: 'ความชัดเจนในการอธิบาย' },
+    { key: 'preparation', name: 'ความเตรียมพร้อม' },
+    { key: 'interaction', name: 'การมีปฏิสัมพันธ์' },
+    { key: 'punctuality', name: 'ความตรงเวลา' },
+    { key: 'satisfaction', name: 'ความพึงพอใจ' }
+  ];
+  
+  for (let rating of ratingTypes) {
+    if (!ratings[rating.key]) {
+      errors.push(`กรุณาให้คะแนน${rating.name}`);
+    } else {
+      const ratingValue = parseInt(ratings[rating.key]);
+      if (isNaN(ratingValue) || ratingValue < 1 || ratingValue > 5) {
+        errors.push(`คะแนน${rating.name}ต้องอยู่ระหว่าง 1-5`);
+      }
+    }
+  }
+  
+  // Comments length validation
+  const comments = document.getElementById('comment').value;
+  if (comments && comments.length > 1000) {
+    errors.push('ความคิดเห็นต้องไม่เกิน 1000 ตัวอักษร');
+  }
+  
+  // Display errors if any
+  if (errors.length > 0) {
+    showError('กรุณาแก้ไขข้อผิดพลาดต่อไปนี้:\n\n' + errors.join('\n'));
+    return false;
+  }
+  
+  return true;
+}
+
+// Collect form data
+function collectFormData() {
+  return {
+    timestamp: new Date().toISOString(),
+    course: {
+      id: courseId || 'power-supply',
+      code: courseId || 'power-supply',
+      name: courseName
+    },
+    center: document.getElementById('center').value,
+    week: document.getElementById('week').value,
+    day: document.getElementById('day').value,
+    period: document.getElementById('period').value,
+    instructor: document.getElementById('instructorName').textContent,
+    ratings: ratings,
+    comments: document.getElementById('comment').value || ''
+  };
+}
+
+// Save draft to localStorage
+function saveDraft() {
+  try {
+    const draftData = {
+      ratings,
+      center: document.getElementById('center').value,
+      week: document.getElementById('week').value,
+      day: document.getElementById('day').value,
+      period: document.getElementById('period').value,
+      comment: document.getElementById('comment').value
+    };
+    
+    localStorage.setItem(`evaluation_draft_${courseId || 'default'}`, JSON.stringify(draftData));
+    console.log('💾 Draft saved');
+  } catch (error) {
+    console.log('⚠️ Could not save draft:', error);
+  }
+}
+
+// Load draft from localStorage
+function loadDraft() {
+  try {
+    const draft = localStorage.getItem(`evaluation_draft_${courseId || 'default'}`);
+    if (draft) {
+      const draftData = JSON.parse(draft);
+      console.log('📄 Loading draft:', draftData);
+      
+      // Restore ratings
+      ratings = draftData.ratings || {};
+      Object.keys(ratings).forEach(ratingType => {
+        const value = ratings[ratingType];
+        if (value) {
+          document.querySelector(`[data-rating="${ratingType}"][data-value="${value}"]`).classList.add('selected');
+        }
+      });
+      
+      // Restore form values
+      if (draftData.center) document.getElementById('center').value = draftData.center;
+      if (draftData.week) document.getElementById('week').value = draftData.week;
+      if (draftData.day) document.getElementById('day').value = draftData.day;
+      if (draftData.period) document.getElementById('period').value = draftData.period;
+      if (draftData.comment) document.getElementById('comment').value = draftData.comment;
+      
+      // Update instructor display
+      updateInstructor();
+    }
+  } catch (error) {
+    console.log('⚠️ Could not load draft:', error);
+  }
+}
+
+// Show success screen
+function showSuccess() {
+  document.getElementById('evaluation-form').style.display = 'none';
+  document.getElementById('successScreen').style.display = 'block';
+  
+  // Start countdown
+  let countdown = 5;
+  const countdownTimer = document.getElementById('countdownTimer');
+  
+  const timer = setInterval(() => {
+    countdown--;
+    countdownTimer.textContent = countdown;
+    
+    if (countdown <= 0) {
+      clearInterval(timer);
+      // Try to close window, fallback to reload
+      try {
+        window.close();
+      } catch (e) {
+        window.location.reload();
+      }
+    }
+  }, 1000);
+}
+
+// Reset form
+function resetForm() {
+  window.location.reload();
+}
+
+// Show loading
+function showLoading() {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('submitBtn').disabled = true;
+  hideError();
+}
+
+// Hide loading
+function hideLoading() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('submitBtn').disabled = false;
+}
+
+// Show error message
+function showError(message) {
+  document.getElementById('errorText').textContent = message;
+  document.getElementById('errorMessage').style.display = 'block';
+  
+  // Auto-hide after 5 seconds
+  setTimeout(() => {
+    hideError();
+  }, 5000);
+}
+
+// Hide error message
+function hideError() {
+  document.getElementById('errorMessage').style.display = 'none';
+}
+
+// Utility functions for better UX
+function initializeAccessibility() {
+  // Add keyboard navigation support
+  const ratingButtons = document.querySelectorAll('.rating-button');
+  ratingButtons.forEach((button, index) => {
+    button.setAttribute('tabindex', '0');
+    button.setAttribute('role', 'radio');
+    button.setAttribute('aria-describedby', 'rating-instruction');
+    
+    button.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        button.click();
+      }
+    });
+  });
+}
+
+function addFormInteractions() {
+  // Add visual feedback for form completion
+  const requiredFields = document.querySelectorAll('select[required]');
+  requiredFields.forEach(field => {
+    field.addEventListener('change', () => {
+      if (field.value) {
+        field.style.borderColor = '#10b981';
+        field.style.boxShadow = '0 0 0 2px rgba(16, 185, 129, 0.1)';
+      }
+    });
+  });
+  
+  // Add form progress indication
+  const totalSteps = 4; // Basic info, ratings (5), comments
+  updateProgress();
+}
+
+function updateProgress() {
+  const completedBasicInfo = ['center', 'week', 'day', 'period'].every(id => 
+    document.getElementById(id).value
+  );
+  const completedRatings = Object.keys(ratings).length;
+  const progressPercent = Math.round(
+    ((completedBasicInfo ? 1 : 0) + (completedRatings / 5)) / 2 * 100
+  );
+  
+  console.log(`📊 Form Progress: ${progressPercent}%`);
+}
+
+function showNetworkStatus() {
+  if ('navigator' in window && 'onLine' in navigator) {
+    if (!navigator.onLine) {
+      showError('ไม่มีการเชื่อมต่ออินเทอร์เน็ต กรุณาตรวจสอบการเชื่อมต่อ');
+    }
+  }
+}
+
+// Initialize advanced features
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    initializeAccessibility();
+    addFormInteractions();
+    showNetworkStatus();
+  }, 100);
+});
+
+// Production ready logging
+const isProduction = CONFIG.ENVIRONMENT === 'production';
+if (!isProduction) {
+  console.log(`🎓 ${courseName} Single Page Evaluation System v${CONFIG.VERSION} - Ready`);
+  console.log('🔧 Development Mode - Debug logs enabled');
+} else {
+  console.log(`🎓 Evaluation System v${CONFIG.VERSION} - Production Mode`);
+}
+</script>
+</body>
+</html>

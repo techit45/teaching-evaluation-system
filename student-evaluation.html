@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แบบประเมินการสอน - ระบบประเมินการสอนออนไลน์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            padding: 40px 20px 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .main-container {
+            background: white;
+            margin: 0 20px;
+            border-radius: 24px 24px 0 0;
+            min-height: calc(100vh - 200px);
+            padding: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+            color: #1f2937;
+        }
+
+        .header-info {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .course-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 20px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .sparkles {
+            position: relative;
+            overflow: visible;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        .sparkle:nth-child(1) { top: -20px; left: -20px; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: -30px; right: -10px; animation-delay: 0.5s; }
+        .sparkle:nth-child(3) { bottom: -20px; left: -10px; animation-delay: 1s; }
+        .sparkle:nth-child(4) { bottom: -30px; right: -20px; animation-delay: 1.5s; }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .header-card {
+            background: transparent;
+            border: none;
+            padding: 0;
+            margin-bottom: 32px;
+            box-shadow: none;
+        }
+
+        .course-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2); }
+            to { text-shadow: 0 2px 20px rgba(255, 255, 255, 0.4); }
+        }
+
+        .course-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 32px;
+            font-weight: 300;
+        }
+
+        .instructor-info {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .instructor-info:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .instructor-avatar {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); }
+            50% { box-shadow: 0 4px 25px rgba(251, 191, 36, 0.6); }
+        }
+
+        .instructor-details h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .instructor-details p {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+        }
+
+        .evaluation-form {
+            background: transparent;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+        }
+
+        .form-section {
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: #4f46e5;
+            border-radius: 2px;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.1);
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .question-card:nth-child(1) { animation-delay: 0.1s; }
+        .question-card:nth-child(2) { animation-delay: 0.2s; }
+        .question-card:nth-child(3) { animation-delay: 0.3s; }
+        .question-card:nth-child(4) { animation-delay: 0.4s; }
+        .question-card:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
+            border-color: #4f46e5;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .rating-group {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .rating-option {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 80px;
+            max-width: 120px;
+        }
+
+        .rating-input {
+            opacity: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .rating-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 20px 12px;
+            border: 3px solid #e5e7eb;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rating-label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .rating-label:hover::before {
+            left: 100%;
+        }
+
+        .rating-label:hover {
+            border-color: #4f46e5;
+            background: linear-gradient(145deg, #f8fafc, #ffffff);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(79, 70, 229, 0.2);
+        }
+
+        .rating-input:checked + .rating-label {
+            border-color: #4f46e5;
+            background: linear-gradient(145deg, #eff6ff, #dbeafe);
+            color: #1d4ed8;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1.1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .rating-emoji {
+            font-size: 32px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+            transition: all 0.3s ease;
+        }
+
+        .rating-label:hover .rating-emoji {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .rating-input:checked + .rating-label .rating-emoji {
+            animation: wiggle 0.6s ease;
+        }
+
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg) scale(1.1); }
+            75% { transform: rotate(10deg) scale(1.1); }
+        }
+
+        .rating-text {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+            line-height: 1.2;
+        }
+
+        .rating-input:checked + .rating-label .rating-text {
+            color: #1d4ed8;
+        }
+
+        .comment-section {
+            margin-top: 32px;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .comment-textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .comment-textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .submit-section {
+            text-align: center;
+            padding-top: 32px;
+            border-top: 1px solid #e5e7eb;
+            margin-top: 32px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 240px;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.3);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #4338ca, #6d28d9);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(79, 70, 229, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .submit-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .progress-bar {
+            background: rgba(229, 231, 235, 0.3);
+            height: 8px;
+            border-radius: 50px;
+            margin-bottom: 32px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899);
+            height: 100%;
+            width: 0%;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            transform: translateX(-5px);
+        }
+
+        .success-message {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .success-message i {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: #059669;
+        }
+
+        .success-message h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .loading::after {
+            content: '';
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 32px 20px 60px;
+            }
+
+            .main-container {
+                margin: 0 10px;
+                padding: 24px;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .course-title {
+                font-size: 28px;
+            }
+
+            .rating-group {
+                gap: 8px;
+            }
+
+            .rating-option {
+                min-width: 60px;
+                max-width: 80px;
+            }
+
+            .rating-label {
+                padding: 16px 8px;
+            }
+
+            .rating-emoji {
+                font-size: 28px;
+            }
+
+            .rating-text {
+                font-size: 11px;
+            }
+
+            .instructor-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="course-management.html" class="back-link">
+            <i class="fas fa-arrow-left"></i>
+            กลับไปเลือกหลักสูตร
+        </a>
+        
+        <div class="header-info" id="headerCard">
+            <div class="course-icon sparkles">
+                <i class="fas fa-star"></i>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+                <div class="sparkle"></div>
+            </div>
+            <div class="course-badge" id="courseBadge">กำลังโหลด...</div>
+            <h1 class="course-title" id="courseTitle">กำลังโหลดข้อมูลหลักสูตร...</h1>
+            <p class="course-subtitle">แบบประเมินคุณภาพการสอน</p>
+            
+            <div class="instructor-info">
+                <div class="instructor-avatar" id="instructorAvatar">?</div>
+                <div class="instructor-details">
+                    <h3 id="instructorName">กำลังโหลด...</h3>
+                    <p>อาจารย์ประจำหลักสูตร</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i>
+            <h3>ส่งการประเมินสำเร็จ!</h3>
+            <p>ขอบคุณสำหรับการประเมินการสอน ข้อมูลของคุณจะช่วยพัฒนาคุณภาพการสอนให้ดียิ่งขึ้น</p>
+        </div>
+
+        <div class="evaluation-form" id="evaluationForm" style="display: none;">
+            <div class="progress-text" id="progressText">ความคืบหน้า: 0%</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <form id="evalForm">
+                <div class="form-section">
+                    <h2 class="section-title">การประเมินด้านต่างๆ</h2>
+                    
+                    <div class="question-card">
+                        <div class="question-text">1. ความชัดเจนในการอธิบายเนื้อหา</div>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="clarity" value="5" id="clarity5" class="rating-input">
+                                <label for="clarity5" class="rating-label">
+                                    <span class="rating-emoji">😍</span>
+                                    <span class="rating-text">ดีเยี่ยม</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="clarity" value="4" id="clarity4" class="rating-input">
+                                <label for="clarity4" class="rating-label">
+                                    <span class="rating-emoji">😊</span>
+                                    <span class="rating-text">ดี</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="clarity" value="3" id="clarity3" class="rating-input">
+                                <label for="clarity3" class="rating-label">
+                                    <span class="rating-emoji">😐</span>
+                                    <span class="rating-text">ปานกลาง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="clarity" value="2" id="clarity2" class="rating-input">
+                                <label for="clarity2" class="rating-label">
+                                    <span class="rating-emoji">😕</span>
+                                    <span class="rating-text">ต้องปรับปรุง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="clarity" value="1" id="clarity1" class="rating-input">
+                                <label for="clarity1" class="rating-label">
+                                    <span class="rating-emoji">😤</span>
+                                    <span class="rating-text">ไม่ดี</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="question-text">2. ความพร้อมและการเตรียมตัวของอาจารย์</div>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="preparation" value="5" id="preparation5" class="rating-input">
+                                <label for="preparation5" class="rating-label">
+                                    <span class="rating-emoji">🎯</span>
+                                    <span class="rating-text">ดีเยี่ยม</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="preparation" value="4" id="preparation4" class="rating-input">
+                                <label for="preparation4" class="rating-label">
+                                    <span class="rating-emoji">📚</span>
+                                    <span class="rating-text">ดี</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="preparation" value="3" id="preparation3" class="rating-input">
+                                <label for="preparation3" class="rating-label">
+                                    <span class="rating-emoji">📖</span>
+                                    <span class="rating-text">ปานกลาง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="preparation" value="2" id="preparation2" class="rating-input">
+                                <label for="preparation2" class="rating-label">
+                                    <span class="rating-emoji">📝</span>
+                                    <span class="rating-text">ต้องปรับปรุง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="preparation" value="1" id="preparation1" class="rating-input">
+                                <label for="preparation1" class="rating-label">
+                                    <span class="rating-emoji">❌</span>
+                                    <span class="rating-text">ไม่ดี</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="question-text">3. การมีปฏิสัมพันธ์และการตอบคำถาม</div>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="interaction" value="5" id="interaction5" class="rating-input">
+                                <label for="interaction5" class="rating-label">
+                                    <span class="rating-emoji">💬</span>
+                                    <span class="rating-text">ดีเยี่ยม</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="interaction" value="4" id="interaction4" class="rating-input">
+                                <label for="interaction4" class="rating-label">
+                                    <span class="rating-emoji">🗣️</span>
+                                    <span class="rating-text">ดี</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="interaction" value="3" id="interaction3" class="rating-input">
+                                <label for="interaction3" class="rating-label">
+                                    <span class="rating-emoji">🤷</span>
+                                    <span class="rating-text">ปานกลาง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="interaction" value="2" id="interaction2" class="rating-input">
+                                <label for="interaction2" class="rating-label">
+                                    <span class="rating-emoji">❓</span>
+                                    <span class="rating-text">ต้องปรับปรุง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="interaction" value="1" id="interaction1" class="rating-input">
+                                <label for="interaction1" class="rating-label">
+                                    <span class="rating-emoji">🚫</span>
+                                    <span class="rating-text">ไม่ดี</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="question-text">4. ความเหมาะสมของเนื้อหาและกิจกรรม</div>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="content" value="5" id="content5" class="rating-input">
+                                <label for="content5" class="rating-label">
+                                    <span class="rating-emoji">🎯</span>
+                                    <span class="rating-text">ดีเยี่ยม</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="content" value="4" id="content4" class="rating-input">
+                                <label for="content4" class="rating-label">
+                                    <span class="rating-emoji">👍</span>
+                                    <span class="rating-text">ดี</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="content" value="3" id="content3" class="rating-input">
+                                <label for="content3" class="rating-label">
+                                    <span class="rating-emoji">👌</span>
+                                    <span class="rating-text">ปานกลาง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="content" value="2" id="content2" class="rating-input">
+                                <label for="content2" class="rating-label">
+                                    <span class="rating-emoji">👎</span>
+                                    <span class="rating-text">ต้องปรับปรุง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="content" value="1" id="content1" class="rating-input">
+                                <label for="content1" class="rating-label">
+                                    <span class="rating-emoji">💔</span>
+                                    <span class="rating-text">ไม่ดี</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="question-card">
+                        <div class="question-text">5. ความพึงพอใจโดยรวม</div>
+                        <div class="rating-group">
+                            <div class="rating-option">
+                                <input type="radio" name="overall" value="5" id="overall5" class="rating-input">
+                                <label for="overall5" class="rating-label">
+                                    <span class="rating-emoji">⭐</span>
+                                    <span class="rating-text">ดีเยี่ยม</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="overall" value="4" id="overall4" class="rating-input">
+                                <label for="overall4" class="rating-label">
+                                    <span class="rating-emoji">🌟</span>
+                                    <span class="rating-text">ดี</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="overall" value="3" id="overall3" class="rating-input">
+                                <label for="overall3" class="rating-label">
+                                    <span class="rating-emoji">✨</span>
+                                    <span class="rating-text">ปานกลาง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="overall" value="2" id="overall2" class="rating-input">
+                                <label for="overall2" class="rating-label">
+                                    <span class="rating-emoji">💫</span>
+                                    <span class="rating-text">ต้องปรับปรุง</span>
+                                </label>
+                            </div>
+                            <div class="rating-option">
+                                <input type="radio" name="overall" value="1" id="overall1" class="rating-input">
+                                <label for="overall1" class="rating-label">
+                                    <span class="rating-emoji">💥</span>
+                                    <span class="rating-text">ไม่ดี</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="comment-section">
+                    <h2 class="section-title">ความคิดเห็นและข้อเสนอแนะ</h2>
+                    <textarea name="comments" id="comments" class="comment-textarea" 
+                              placeholder="กรุณาแสดงความคิดเห็นหรือข้อเสนอแนะเพื่อการพัฒนาคุณภาพการสอน... (ไม่บังคับ)"></textarea>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        <i class="fas fa-paper-plane"></i>
+                        ส่งการประเมิน
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = window.EVALUATION_SYSTEM_CONFIG?.API_URL || 'https://script.google.com/macros/s/AKfycbzxNwg2M8saVUaxOBvTjzE5WpRPtJ1NIOuy4pKUHSTL3wHMB_tDkxeWIzwBHeQmsg/exec';
+        let currentCourseId, currentInstructor;
+
+        // Get URL parameters
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const totalQuestions = 5;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `ความคืบหน้า: ${Math.round(progress)}%`;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = progress < 100;
+        }
+
+        // Load course and instructor data
+        async function loadCourseData() {
+            const courseId = getUrlParameter('courseId');
+            const instructor = getUrlParameter('instructor');
+            
+            if (!courseId || !instructor) {
+                alert('ข้อมูลไม่สมบูรณ์ กรุณาเลือกหลักสูตรใหม่');
+                window.location.href = 'course-management.html';
+                return;
+            }
+            
+            currentCourseId = courseId;
+            currentInstructor = instructor;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ 
+                        action: 'getCourses'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.courses) {
+                    const course = data.courses.find(c => c.id == courseId);
+                    
+                    if (course) {
+                        document.getElementById('courseBadge').textContent = course.code;
+                        document.getElementById('courseTitle').textContent = course.name;
+                        document.getElementById('instructorName').textContent = instructor;
+                        
+                        const initials = instructor.split(' ')
+                            .map(name => name.charAt(0))
+                            .join('')
+                            .toUpperCase()
+                            .substring(0, 2);
+                        document.getElementById('instructorAvatar').textContent = initials;
+                        
+                        document.getElementById('evaluationForm').style.display = 'block';
+                    } else {
+                        throw new Error('ไม่พบข้อมูลหลักสูตร');
+                    }
+                } else {
+                    throw new Error('ไม่สามารถโหลดข้อมูลได้');
+                }
+            } catch (error) {
+                console.error('Error loading course data:', error);
+                alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+                window.location.href = 'course-management.html';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('evalForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<span class="loading">กำลังส่ง...</span>';
+            submitBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(this);
+                const evaluationData = {
+                    action: 'submitEvaluation',
+                    data: {
+                        courseId: currentCourseId,
+                        instructor: currentInstructor,
+                        ratings: {
+                            clarity: parseInt(formData.get('clarity')),
+                            preparation: parseInt(formData.get('preparation')),
+                            interaction: parseInt(formData.get('interaction')),
+                            punctuality: parseInt(formData.get('content')), // Map content to punctuality
+                            satisfaction: parseInt(formData.get('overall')) // Map overall to satisfaction
+                        },
+                        comments: formData.get('comments'),
+                        timestamp: new Date().toISOString()
+                    }
+                };
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(evaluationData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    // Show success message
+                    document.getElementById('headerCard').style.display = 'none';
+                    document.getElementById('evaluationForm').style.display = 'none';
+                    document.getElementById('successMessage').classList.add('show');
+                    
+                    // Redirect after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = 'course-management.html';
+                    }, 3000);
+                } else {
+                    throw new Error(result.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล');
+                }
+            } catch (error) {
+                console.error('Error submitting evaluation:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+                
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                updateProgress();
+            }
+        });
+
+        // Add event listeners for progress tracking
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'radio') {
+                updateProgress();
+            }
+        });
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourseData();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

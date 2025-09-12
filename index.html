@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบประเมินการสอนออนไลน์ - กำลังเปลี่ยนเส้นทาง</title>
+    
+    <!-- Automatic redirect to new homepage -->
+    <meta http-equiv="refresh" content="0; url=homepage.html">
+    
+    <!-- JavaScript redirect as backup -->
+    <script type="text/javascript">
+        window.location.href = "homepage.html";
+    </script>
+    
+    <!-- Canonical URL for SEO -->
+    <link rel="canonical" href="homepage.html">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap');
+        
+        body {
+            font-family: 'Kanit', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .redirect-container {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        
+        p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        a {
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        a:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 20px auto;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-container">
+        <div class="spinner"></div>
+        <h1>กำลังเปลี่ยนเส้นทาง...</h1>
+        <p>กำลังนำคุณไปยังหน้าหลักของระบบประเมินการสอน</p>
+        <noscript>
+            <p style="color: #fbbf24; margin-top: 1rem;">
+                ⚠️ JavaScript ถูกปิดใช้งาน
+            </p>
+            <a href="homepage.html">คลิกที่นี่เพื่อไปยังหน้าหลัก</a>
+        </noscript>
+    </div>
+</body>
+</html>

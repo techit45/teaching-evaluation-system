@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Integration Test - ระบบประเมินการสอน</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .test-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+
+        .test-button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.2s ease;
+        }
+
+        .test-button:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+
+        .test-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .result.success {
+            background: #dcfce7;
+            border: 1px solid #10b981;
+            color: #166534;
+        }
+
+        .result.error {
+            background: #fef2f2;
+            border: 1px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .result.loading {
+            background: #eff6ff;
+            border: 1px solid #3b82f6;
+            color: #1e40af;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-success { background: #10b981; }
+        .status-error { background: #ef4444; }
+        .status-loading { background: #3b82f6; animation: pulse 1s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-flask"></i> API Integration Test</h1>
+            <p>ทดสอบการเชื่อมต่อระบบประเมินการสอนกับ Google Apps Script</p>
+        </div>
+
+        <div class="test-section">
+            <h3><i class="fas fa-heartbeat"></i> Health Check</h3>
+            <p>ทดสอบการเชื่อมต่อพื้นฐาน</p>
+            <button class="test-button" onclick="testHealthCheck()">
+                <i class="fas fa-play"></i> Test Health Check
+            </button>
+            <div id="health-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3><i class="fas fa-book"></i> Course Management</h3>
+            <p>ทดสอบการจัดการหลักสูตร</p>
+            <button class="test-button" onclick="testGetCourses()">
+                <i class="fas fa-list"></i> Get Courses
+            </button>
+            <button class="test-button" onclick="testCreateCourse()">
+                <i class="fas fa-plus"></i> Create Test Course
+            </button>
+            <div id="courses-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3><i class="fas fa-users"></i> Instructors</h3>
+            <p>ทดสอบข้อมูลผู้สอน</p>
+            <button class="test-button" onclick="testGetInstructors()">
+                <i class="fas fa-chalkboard-teacher"></i> Get Instructors
+            </button>
+            <div id="instructors-result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3><i class="fas fa-star"></i> Evaluation System</h3>
+            <p>ทดสอบระบบประเมิน</p>
+            <button class="test-button" onclick="testSubmitEvaluation()">
+                <i class="fas fa-paper-plane"></i> Submit Test Evaluation
+            </button>
+            <button class="test-button" onclick="testGetStats()">
+                <i class="fas fa-chart-bar"></i> Get Statistics
+            </button>
+            <div id="evaluation-result"></div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="tests-passed">0</div>
+                <div>Tests Passed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="tests-failed">0</div>
+                <div>Tests Failed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-tests">0</div>
+                <div>Total Tests</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.EVALUATION_SYSTEM_CONFIG?.API_URL || 'https://script.google.com/macros/s/AKfycbzxNwg2M8saVUaxOBvTjzE5WpRPtJ1NIOuy4pKUHSTL3wHMB_tDkxeWIzwBHeQmsg/exec';
+        
+        let testsPassed = 0;
+        let testsFailed = 0;
+        let totalTests = 0;
+
+        function updateStats() {
+            document.getElementById('tests-passed').textContent = testsPassed;
+            document.getElementById('tests-failed').textContent = testsFailed;
+            document.getElementById('total-tests').textContent = totalTests;
+        }
+
+        function showResult(elementId, status, message, data = null) {
+            const element = document.getElementById(elementId);
+            const statusClass = status === 'success' ? 'success' : status === 'error' ? 'error' : 'loading';
+            const statusIcon = status === 'success' ? 'success' : status === 'error' ? 'error' : 'loading';
+            
+            let content = `
+                <div class="result ${statusClass}">
+                    <div><span class="status-indicator status-${statusIcon}"></span>${message}</div>
+            `;
+            
+            if (data) {
+                content += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
+            
+            content += '</div>';
+            element.innerHTML = content;
+
+            if (status === 'success') {
+                testsPassed++;
+            } else if (status === 'error') {
+                testsFailed++;
+            }
+            
+            if (status !== 'loading') {
+                totalTests++;
+                updateStats();
+            }
+        }
+
+        async function makeRequest(data, description) {
+            try {
+                console.log('Making request:', description, data);
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                console.log('Response data:', result);
+                
+                return result;
+            } catch (error) {
+                console.error('Request failed:', error);
+                throw error;
+            }
+        }
+
+        async function testHealthCheck() {
+            showResult('health-result', 'loading', 'กำลังทดสอบการเชื่อมต่อ...');
+            
+            try {
+                const result = await makeRequest({ action: 'health' }, 'Health Check');
+                
+                if (result.status === 'success') {
+                    showResult('health-result', 'success', 'เชื่อมต่อสำเร็จ!', result);
+                } else {
+                    showResult('health-result', 'error', 'การเชื่อมต่อล้มเหลว', result);
+                }
+            } catch (error) {
+                showResult('health-result', 'error', 'เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        async function testGetCourses() {
+            showResult('courses-result', 'loading', 'กำลังดึงข้อมูลหลักสูตร...');
+            
+            try {
+                const result = await makeRequest({ action: 'getCourses' }, 'Get Courses');
+                
+                if (result.status === 'success') {
+                    const courseCount = result.data && result.data.courses ? result.data.courses.length : 0;
+                    showResult('courses-result', 'success', `ดึงข้อมูลหลักสูตรสำเร็จ (${courseCount} หลักสูตร)`, result);
+                } else {
+                    showResult('courses-result', 'error', 'ไม่สามารถดึงข้อมูลหลักสูตรได้', result);
+                }
+            } catch (error) {
+                showResult('courses-result', 'error', 'เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        async function testCreateCourse() {
+            showResult('courses-result', 'loading', 'กำลังสร้างหลักสูตรทดสอบ...');
+            
+            const testCourse = {
+                action: 'createCourse',
+                data: {
+                    code: 'TEST' + Date.now(),
+                    name: 'Test Course ' + new Date().toLocaleString('th-TH'),
+                    category: 'testing',
+                    duration: 8,
+                    description: 'หลักสูตรทดสอบการเชื่อมต่อ API'
+                }
+            };
+            
+            try {
+                const result = await makeRequest(testCourse, 'Create Course');
+                
+                if (result.status === 'success') {
+                    showResult('courses-result', 'success', 'สร้างหลักสูตรทดสอบสำเร็จ!', result);
+                } else {
+                    showResult('courses-result', 'error', 'ไม่สามารถสร้างหลักสูตรได้', result);
+                }
+            } catch (error) {
+                showResult('courses-result', 'error', 'เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        async function testGetInstructors() {
+            showResult('instructors-result', 'loading', 'กำลังดึงข้อมูลผู้สอน...');
+            
+            try {
+                // First get courses to find a course ID
+                const coursesResult = await makeRequest({ action: 'getCourses' }, 'Get Courses for Instructors');
+                
+                let courseId = null;
+                if (coursesResult.status === 'success' && coursesResult.data && coursesResult.data.courses && coursesResult.data.courses.length > 0) {
+                    courseId = coursesResult.data.courses[0].code; // Use first course code
+                }
+
+                const result = await makeRequest({ 
+                    action: 'getInstructors',
+                    courseId: courseId 
+                }, 'Get Instructors');
+                
+                if (result.status === 'success') {
+                    const instructorCount = result.data && result.data.instructors ? result.data.instructors.length : 0;
+                    showResult('instructors-result', 'success', `ดึงข้อมูลผู้สอนสำเร็จ (${instructorCount} รายการ)`, result);
+                } else {
+                    showResult('instructors-result', 'error', 'ไม่สามารถดึงข้อมูลผู้สอนได้', result);
+                }
+            } catch (error) {
+                showResult('instructors-result', 'error', 'เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        async function testSubmitEvaluation() {
+            showResult('evaluation-result', 'loading', 'กำลังส่งการประเมินทดสอบ...');
+            
+            try {
+                // First get courses to find a course to evaluate
+                const coursesResult = await makeRequest({ action: 'getCourses' }, 'Get Courses for Evaluation');
+                
+                if (coursesResult.status !== 'success' || !coursesResult.data || !coursesResult.data.courses || coursesResult.data.courses.length === 0) {
+                    showResult('evaluation-result', 'error', 'ไม่มีหลักสูตรสำหรับทดสอบการประเมิน');
+                    return;
+                }
+
+                const testCourse = coursesResult.data.courses[0];
+                const testEvaluation = {
+                    action: 'submitEvaluation',
+                    data: {
+                        course: {
+                            id: testCourse.id,
+                            code: testCourse.code,
+                            name: testCourse.name
+                        },
+                        center: 'Test Center',
+                        week: Math.floor(Math.random() * 52) + 1,
+                        day: 'จันทร์',
+                        period: 'เช้า',
+                        instructor: 'ผู้สอนทดสอบ',
+                        ratings: {
+                            clarity: 4,
+                            preparation: 5,
+                            interaction: 4,
+                            punctuality: 5,
+                            satisfaction: 4
+                        },
+                        comments: 'การประเมินทดสอบระบบ'
+                    }
+                };
+                
+                const result = await makeRequest(testEvaluation, 'Submit Evaluation');
+                
+                if (result.status === 'success') {
+                    showResult('evaluation-result', 'success', 'ส่งการประเมินทดสอบสำเร็จ!', result);
+                } else {
+                    showResult('evaluation-result', 'error', 'ไม่สามารถส่งการประเมินได้', result);
+                }
+            } catch (error) {
+                showResult('evaluation-result', 'error', 'เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        async function testGetStats() {
+            showResult('evaluation-result', 'loading', 'กำลังดึงสถิติการประเมิน...');
+            
+            try {
+                const result = await makeRequest({ 
+                    action: 'getEvaluationStats' 
+                }, 'Get Statistics');
+                
+                if (result.status === 'success') {
+                    showResult('evaluation-result', 'success', 'ดึงสถิติการประเมินสำเร็จ!', result);
+                } else {
+                    showResult('evaluation-result', 'error', 'ไม่สามารถดึงสถิติได้', result);
+                }
+            } catch (error) {
+                showResult('evaluation-result', 'error', 'เกิดข้อผิดพลาด: ' + error.message);
+            }
+        }
+
+        // Run health check automatically on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(testHealthCheck, 1000);
+        });
+    </script>
+</body>
+</html>

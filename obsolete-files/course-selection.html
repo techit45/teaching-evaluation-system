@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เลือกหลักสูตรสำหรับประเมิน - ระบบประเมินการสอนออนไลน์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            padding: 40px 20px 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .header-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .main-container {
+            background: white;
+            margin: 0 20px;
+            border-radius: 24px 24px 0 0;
+            min-height: calc(100vh - 200px);
+            padding: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+            color: #1f2937;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 24px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #4f46e5;
+            border-radius: 2px;
+        }
+
+        .intro-section {
+            background: transparent;
+            padding: 32px 0;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .intro-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .intro-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .intro-description {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 24px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 32px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-btn:hover {
+            background: #4338ca;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 64px;
+            color: #6b7280;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .course-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+        }
+
+        .course-card:hover {
+            border-color: #4f46e5;
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .course-code {
+            background: #f3f4f6;
+            color: #6b7280;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .course-id {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .course-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .course-description {
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .instructors-section {
+            margin-bottom: 20px;
+        }
+
+        .instructors-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .instructors-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .instructor-tag {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .instructor-tag:hover {
+            background: #dbeafe;
+            transform: translateY(-1px);
+        }
+
+        .instructor-tag i {
+            font-size: 10px;
+        }
+
+        .evaluate-btn {
+            width: 100%;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .evaluate-btn:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 32px;
+            color: #9ca3af;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #6b7280;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .close-btn:hover {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .instructor-grid {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .instructor-option {
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .instructor-option:hover {
+            border-color: #4f46e5;
+            background: #f8fafc;
+        }
+
+        .instructor-option.selected {
+            border-color: #4f46e5;
+            background: #eff6ff;
+        }
+
+        .instructor-avatar {
+            width: 40px;
+            height: 40px;
+            background: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .instructor-info h4 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }
+
+        .instructor-info p {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-primary:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 32px 20px 60px;
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .main-container {
+                margin: 0 10px;
+                padding: 24px;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .intro-section, .search-section {
+                padding: 24px 20px;
+            }
+
+            .modal-content {
+                margin: 20px;
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="header-title">
+                <div class="header-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="header-text">
+                    <h1>ประเมินการสอน</h1>
+                    <p>เลือกหลักสูตรและอาจารย์ที่ต้องการประเมิน</p>
+                </div>
+            </div>
+            <a href="homepage.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                กลับหน้าหลัก
+            </a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="intro-section">
+            <div class="intro-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h2 class="intro-title">ประเมินคุณภาพการสอน</h2>
+            <p class="intro-description">
+                การประเมินของคุณจะช่วยให้อาจารย์และสถาบันพัฒนาคุณภาพการสอนให้ดียิ่งขึ้น 
+                กรุณาให้คะแนนและความคิดเห็นอย่างตรงใจและเป็นประโยชน์
+            </p>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">ค้นหาหลักสูตร</h2>
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" 
+                           placeholder="ค้นหาชื่อหลักสูตรหรือรหัสหลักสูตร...">
+                    <button class="search-btn" onclick="searchCourses()">
+                        <i class="fas fa-search"></i>
+                        ค้นหา
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="coursesSection">
+            <h2 class="section-title">หลักสูตรที่เปิดสอน</h2>
+            <div class="loading-state" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>กำลังโหลดรายการหลักสูตร...</p>
+            </div>
+            
+            <div id="coursesGrid" class="courses-grid" style="display: none;"></div>
+            
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-search"></i>
+                <h3>ไม่พบหลักสูตร</h3>
+                <p>ไม่พบหลักสูตรที่ตรงกับการค้นหาของคุณ</p>
+                <button class="btn-primary" onclick="loadCourses()">
+                    <i class="fas fa-sync-alt"></i>
+                    โหลดทั้งหมดใหม่
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Instructor Selection Modal -->
+    <div id="instructorModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">เลือกอาจารย์ที่ต้องการประเมิน</h3>
+                <button class="close-btn" onclick="closeInstructorModal()">&times;</button>
+            </div>
+            
+            <div id="instructorGrid" class="instructor-grid">
+                <!-- Instructors will be loaded here -->
+            </div>
+            
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeInstructorModal()">ยกเลิก</button>
+                <button class="btn-primary" id="proceedBtn" onclick="proceedToEvaluation()" disabled>
+                    ดำเนินการต่อ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = window.EVALUATION_SYSTEM_CONFIG?.API_URL || 'https://script.google.com/macros/s/AKfycbzxNwg2M8saVUaxOBvTjzE5WpRPtJ1NIOuy4pKUHSTL3wHMB_tDkxeWIzwBHeQmsg/exec';
+        let allCourses = [];
+        let selectedCourse = null;
+        let selectedInstructor = null;
+
+        async function loadCourses() {
+            const loadingState = document.getElementById('loadingState');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            loadingState.style.display = 'block';
+            coursesGrid.style.display = 'none';
+            emptyState.style.display = 'none';
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'getCourses' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.data && data.data.courses) {
+                    allCourses = data.data.courses;
+                    displayCourses(allCourses);
+                } else {
+                    throw new Error('ไม่สามารถโหลดข้อมูลหลักสูตรได้');
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                loadingState.innerHTML = `
+                    <div style="text-align: center; color: #ef4444;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 16px;"></i>
+                        <h3>เกิดข้อผิดพลาด</h3>
+                        <p>ไม่สามารถโหลดข้อมูลหลักสูตรได้</p>
+                        <button class="btn-primary" onclick="loadCourses()" style="margin-top: 16px;">
+                            <i class="fas fa-sync-alt"></i>
+                            ลองใหม่
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function displayCourses(courses) {
+            const loadingState = document.getElementById('loadingState');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            loadingState.style.display = 'none';
+            
+            if (courses.length === 0) {
+                emptyState.style.display = 'block';
+                coursesGrid.style.display = 'none';
+                return;
+            }
+            
+            coursesGrid.innerHTML = courses.map(course => {
+                const instructors = course.instructors || ['อาจารย์ประจำหลักสูตร'];
+                return `
+                    <div class="course-card">
+                        <div class="course-header">
+                            <span class="course-code">${course.code}</span>
+                            <span class="course-id">ID: ${course.id}</span>
+                        </div>
+                        
+                        <h3 class="course-name">${course.name}</h3>
+                        <p class="course-description">${course.description || 'ไม่มีรายละเอียดเพิ่มเติม'}</p>
+                        
+                        <div class="instructors-section">
+                            <div class="instructors-title">อาจารย์ผู้สอน:</div>
+                            <div class="instructors-list">
+                                ${instructors.map(instructor => `
+                                    <span class="instructor-tag">
+                                        <i class="fas fa-user"></i>
+                                        ${instructor}
+                                    </span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <button class="evaluate-btn" onclick="selectCourse(${course.id})">
+                            <i class="fas fa-star"></i>
+                            เริ่มประเมิน
+                        </button>
+                    </div>
+                `;
+            }).join('');
+            
+            coursesGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+        }
+
+        async function selectCourse(courseId) {
+            selectedCourse = allCourses.find(course => course.id == courseId);
+            
+            if (!selectedCourse) {
+                alert('ไม่พบข้อมูลหลักสูตร');
+                return;
+            }
+            
+            try {
+                // Load instructors for this course
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ 
+                        action: 'getInstructors', 
+                        courseId: courseId 
+                    })
+                });
+                
+                const data = await response.json();
+                let instructors = [];
+                
+                if (data.status === 'success' && data.data && data.data.instructors && data.data.instructors.length > 0) {
+                    instructors = data.data.instructors;
+                } else {
+                    // Fallback to default instructors
+                    instructors = selectedCourse.instructors || ['อาจารย์ประจำหลักสูตร'];
+                }
+                
+                showInstructorModal(instructors);
+                
+            } catch (error) {
+                console.error('Error loading instructors:', error);
+                // Use default instructor if API fails
+                const instructors = selectedCourse.instructors || ['อาจารย์ประจำหลักสูตร'];
+                showInstructorModal(instructors);
+            }
+        }
+
+        function showInstructorModal(instructors) {
+            const modal = document.getElementById('instructorModal');
+            const instructorGrid = document.getElementById('instructorGrid');
+            
+            instructorGrid.innerHTML = instructors.map((instructor, index) => {
+                const initials = instructor.split(' ')
+                    .map(name => name.charAt(0))
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2);
+                
+                return `
+                    <div class="instructor-option" onclick="selectInstructor('${instructor}', this)">
+                        <div class="instructor-avatar">${initials}</div>
+                        <div class="instructor-info">
+                            <h4>${instructor}</h4>
+                            <p>อาจารย์ประจำหลักสูตร</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            modal.style.display = 'block';
+            selectedInstructor = null;
+            document.getElementById('proceedBtn').disabled = true;
+        }
+
+        function selectInstructor(instructor, element) {
+            // Remove previous selection
+            document.querySelectorAll('.instructor-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selection to clicked element
+            element.classList.add('selected');
+            
+            selectedInstructor = instructor;
+            document.getElementById('proceedBtn').disabled = false;
+        }
+
+        function closeInstructorModal() {
+            document.getElementById('instructorModal').style.display = 'none';
+            selectedCourse = null;
+            selectedInstructor = null;
+        }
+
+        function proceedToEvaluation() {
+            if (!selectedCourse || !selectedInstructor) {
+                alert('กรุณาเลือกหลักสูตรและอาจารย์');
+                return;
+            }
+            
+            const params = new URLSearchParams({
+                courseId: selectedCourse.id,
+                instructor: selectedInstructor
+            });
+            
+            window.location.href = `student-evaluation.html?${params.toString()}`;
+        }
+
+        function searchCourses() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                displayCourses(allCourses);
+                return;
+            }
+            
+            const filteredCourses = allCourses.filter(course => 
+                course.name.toLowerCase().includes(searchTerm) ||
+                course.code.toLowerCase().includes(searchTerm) ||
+                (course.description && course.description.toLowerCase().includes(searchTerm))
+            );
+            
+            displayCourses(filteredCourses);
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('instructorModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeInstructorModal();
+            }
+        });
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchCourses();
+            }
+        });
+
+        // Get URL parameter
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            const results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
+
+        // Auto-select course if courseId is provided in URL
+        function checkForPreselectedCourse() {
+            const courseId = getUrlParameter('courseId');
+            if (courseId && allCourses.length > 0) {
+                const course = allCourses.find(c => c.code === courseId);
+                if (course) {
+                    // Auto-select the course
+                    setTimeout(() => {
+                        selectCourse(course.id);
+                    }, 500);
+                }
+            }
+        }
+
+        // Load courses when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourses().then(() => {
+                checkForPreselectedCourse();
+            });
+        });
+    </script>
+</body>
+</html>

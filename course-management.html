@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดการหลักสูตร - ระบบประเมินการสอนออนไลน์</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #1d4ed8 100%);
+            min-height: 100vh;
+            color: white;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 15% 15%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(147, 197, 253, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(37, 99, 235, 0.05) 0%, transparent 30%);
+            pointer-events: none;
+            z-index: -1;
+            background-size: 100% 100%;
+            background-attachment: fixed;
+        }
+
+        .header {
+            padding: 40px 40px 60px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .company-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .company-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            max-width: 40px;
+            max-height: 40px;
+        }
+
+        .header-text h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .header-text p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            color: white;
+        }
+
+        .main-container {
+            background: white;
+            margin: 0 20px;
+            border-radius: 24px 24px 0 0;
+            min-height: calc(100vh - 160px);
+            padding: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.1);
+            color: #1f2937;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 24px;
+            position: relative;
+            padding-left: 16px;
+        }
+
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #4f46e5;
+            border-radius: 2px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            gap: 16px;
+        }
+
+        .search-box {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .course-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4f46e5, #7c3aed);
+        }
+
+        .course-card:hover {
+            border-color: #4f46e5;
+            box-shadow: 0 8px 25px rgba(79, 70, 229, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .course-code {
+            background: #f3f4f6;
+            color: #6b7280;
+            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn.evaluate {
+            background: #ecfdf5;
+            color: #059669;
+        }
+
+        .action-btn.evaluate:hover {
+            background: #d1fae5;
+        }
+
+        .action-btn.qr {
+            background: #f3f4f6;
+            color: #8b5cf6;
+        }
+
+        .action-btn.qr:hover {
+            background: #ede9fe;
+        }
+
+
+        .action-btn.delete {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .action-btn.delete:hover {
+            background: #fee2e2;
+        }
+
+        .course-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .course-id {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+        }
+
+        .close-btn:hover {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 64px;
+            color: #6b7280;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #e5e7eb;
+            border-top: 4px solid #4f46e5;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 32px;
+            color: #9ca3af;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #6b7280;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        /* QR Code Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .qr-modal {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-header h3 {
+            color: #1f2937;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .qr-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        #qr-code {
+            flex-shrink: 0;
+        }
+
+        .qr-info {
+            flex: 1;
+        }
+
+        .url-text {
+            background: #f3f4f6;
+            padding: 8px 12px;
+            border-radius: 6px;
+            word-break: break-all;
+            font-size: 12px;
+            color: #374151;
+            margin: 8px 0;
+        }
+
+        .copy-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .copy-btn:hover {
+            background: #4338ca;
+        }
+
+        .qr-instructions {
+            background: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .qr-instructions h4 {
+            color: #1f2937;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .qr-instructions ol {
+            color: #6b7280;
+            font-size: 13px;
+            line-height: 1.6;
+            padding-left: 16px;
+        }
+
+        .qr-instructions li {
+            margin-bottom: 4px;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 32px 20px 60px;
+            }
+
+            .qr-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .qr-modal {
+                margin: 20px;
+                width: auto;
+            }
+
+            .header-container {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .main-container {
+                margin: 0 10px;
+                padding: 24px;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box {
+                max-width: none;
+            }
+
+            .course-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 20px;
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="company-logo">
+                    <img src="Logo.png" alt="Company Logo" onerror="this.innerHTML='<i class=&quot;fas fa-building&quot; style=&quot;color:#1e40af;&quot;></i>'">
+                </div>
+                <div class="company-info">
+                    <div class="company-name">Loin-learning</div>
+                    <div class="company-tagline">Educational Technology</div>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="header-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="header-title">
+                    <h1>จัดการหลักสูตร</h1>
+                    <p>เพิ่ม และจัดการข้อมูลหลักสูตร</p>
+                </div>
+            </div>
+            <a href="homepage.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                กลับหน้าหลัก
+            </a>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section class="section">
+            <h2 class="section-title">รายการหลักสูตร</h2>
+            
+            <div class="controls">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="ค้นหาหลักสูตร...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i>
+                    เพิ่มหลักสูตรใหม่
+                </button>
+            </div>
+
+            <div class="loading-state" id="loadingState">
+                <div class="loading-spinner"></div>
+                <p>กำลังโหลดข้อมูลหลักสูตร...</p>
+            </div>
+
+            <div id="coursesGrid" class="course-grid" style="display: none;"></div>
+
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-folder-open"></i>
+                <h3>ไม่พบหลักสูตร</h3>
+                <p>ยังไม่มีหลักสูตรในระบบ หรือไม่พบผลลัพธ์ที่ตรงกับการค้นหา</p>
+                <button class="btn btn-primary" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i>
+                    เพิ่มหลักสูตรแรก
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Course Modal -->
+    <div id="courseModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">เพิ่มหลักสูตรใหม่</h3>
+                <button class="close-btn" onclick="closeCourseModal()">&times;</button>
+            </div>
+
+            <form id="courseForm">
+                <div class="form-group">
+                    <label class="form-label" for="courseCode">รหัสหลักสูตร <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="courseCode" name="code" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="courseName">ชื่อหลักสูตร <span style="color: #ef4444;">*</span></label>
+                    <input type="text" id="courseName" name="name" class="form-input" required>
+                </div>
+
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCourseModal()">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                        <i class="fas fa-save"></i>
+                        บันทึก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="modal" style="display: none;">
+        <div class="modal-content qr-modal">
+            <div class="modal-header">
+                <h3 id="qrModalTitle">QR Code หลักสูตร</h3>
+                <button class="close-btn" onclick="closeQRModal()">&times;</button>
+            </div>
+            <div class="qr-container">
+                <div id="qr-code"></div>
+                <div class="qr-info">
+                    <p><strong>หลักสูตร:</strong> <span id="courseInfo"></span></p>
+                    <p><strong>URL สำหรับนักเรียน:</strong></p>
+                    <p id="evaluation-url" class="url-text"></p>
+                    <button onclick="copyURL()" class="copy-btn">
+                        <i class="fas fa-copy"></i> คัดลอก URL
+                    </button>
+                </div>
+            </div>
+            <div class="qr-instructions">
+                <h4>วิธีใช้งาน:</h4>
+                <ol>
+                    <li>ให้นักเรียนสแกน QR Code ด้วยกล้องมือถือ</li>
+                    <li>หรือคัดลอก URL ไปแชร์ให้นักเรียน</li>
+                    <li>นักเรียนจะเข้าสู่หน้าประเมินของหลักสูตรนี้โดยตรง</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Use configuration from config.js
+        const API_URL = window.EVALUATION_SYSTEM_CONFIG?.API_URL || 'https://script.google.com/macros/s/AKfycbzxNwg2M8saVUaxOBvTjzE5WpRPtJ1NIOuy4pKUHSTL3wHMB_tDkxeWIzwBHeQmsg/exec';
+        
+        let allCourses = [];
+
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10000;
+                max-width: 400px;
+                padding: 16px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                font-family: 'Inter', sans-serif;
+                animation: slideInRight 0.3s ease;
+                color: white;
+                background: ${type === 'warning' ? '#f59e0b' : type === 'error' ? '#ef4444' : '#3b82f6'};
+            `;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas ${type === 'warning' ? 'fa-exclamation-triangle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle'}"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; opacity: 0.7; margin-left: auto;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        async function loadCourses() {
+            const loadingState = document.getElementById('loadingState');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            console.log('🔄 Loading courses...', { API_URL });
+            
+            loadingState.style.display = 'block';
+            coursesGrid.style.display = 'none';
+            emptyState.style.display = 'none';
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'getCourses' })
+                });
+                
+                console.log('📡 API Response status:', response.status, response.ok);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('📊 API Response data:', data);
+                
+                if (data.status === 'success') {
+                    allCourses = (data.data && data.data.courses) ? data.data.courses : [];
+                    console.log(`✅ Loaded ${allCourses.length} courses`);
+                    displayCourses(allCourses);
+                } else {
+                    throw new Error(data.error || data.message || 'ไม่สามารถโหลดข้อมูลได้');
+                }
+            } catch (error) {
+                console.error('❌ Error loading courses:', error);
+                
+                // Show sample data if API fails (for demo/development)
+                const sampleCourses = [
+                    {
+                        id: 1,
+                        code: 'PES',
+                        name: 'PESPESPES',
+                        description: 'Power Electronic Systems - ระบบเครื่องใช้ไฟฟ้ากำลัง',
+                        createdAt: '2024-01-15T10:30:00Z',
+                        displayId: '175764560692'
+                    },
+                    {
+                        id: 2,
+                        code: 'FF112',
+                        name: 'FF112',
+                        description: 'Fundamental of Electronics - พื้นฐานอิเล็กทรอนิกส์',
+                        createdAt: '2024-01-20T14:15:00Z',
+                        displayId: '175764560692'
+                    }
+                ];
+                
+                console.log('⚠️ Using sample data due to API error');
+                allCourses = sampleCourses;
+                displayCourses(allCourses);
+            }
+        }
+
+        function displayCourses(courses) {
+            const loadingState = document.getElementById('loadingState');
+            const coursesGrid = document.getElementById('coursesGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            loadingState.style.display = 'none';
+            
+            if (courses.length === 0) {
+                emptyState.style.display = 'block';
+                coursesGrid.style.display = 'none';
+                return;
+            }
+            
+            coursesGrid.innerHTML = courses.map((course, index) => {
+                // Use displayId if available, otherwise generate one
+                const displayId = course.displayId || (() => {
+                    const timestamp = new Date(course.createdAt || new Date()).getTime();
+                    const randomSuffix = Math.floor(Math.random() * 10000);
+                    return `${timestamp}${randomSuffix}`.substring(0, 12);
+                })();
+                
+                return `
+                <div class="course-card">
+                    <div class="course-header">
+                        <span class="course-code">${course.code}</span>
+                        <div class="course-actions">
+                            <button class="action-btn evaluate" onclick="startEvaluation('${course.code}', '${course.name}')" title="เริ่มประเมิน">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button class="action-btn qr" onclick="showCourseQR('${course.code}', '${course.name}')" title="QR Code">
+                                <i class="fas fa-qrcode"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteCourse(${course.id})" title="ลบ">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <h3 class="course-name">${course.name}</h3>
+                    
+                    <div class="course-meta">
+                        <div class="course-id">ID: ${displayId}</div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+            
+            coursesGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+        }
+
+        function openAddModal() {
+            document.getElementById('modalTitle').textContent = 'เพิ่มหลักสูตรใหม่';
+            document.getElementById('courseForm').reset();
+            document.getElementById('courseModal').style.display = 'block';
+        }
+
+
+        async function deleteCourse(courseId) {
+            const course = allCourses.find(c => c.id === courseId);
+            if (!course) {
+                alert('ไม่พบหลักสูตรที่ต้องการลบ');
+                return;
+            }
+            
+            if (!confirm(`คุณต้องการลบหลักสูตร "${course.name}" หรือไม่?\n\nคำเตือน: การกระทำนี้ไม่สามารถย้อนกลับได้`)) return;
+            
+            try {
+                console.log('🗑️ Deleting course:', { courseId, course });
+                
+                // Check if API_URL is available
+                if (!API_URL) {
+                    throw new Error('ไม่พบการตั้งค่า API URL');
+                }
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'deleteCourse',
+                        data: {
+                            courseId: courseId
+                        }
+                    })
+                });
+                
+                console.log('📡 Delete API Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status} - ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('📊 Delete API Response:', result);
+                
+                if (result.status === 'success') {
+                    alert('ลบหลักสูตรเรียบร้อยแล้ว');
+                    loadCourses();
+                } else {
+                    // แก้ไขการแสดง error message
+                    let errorMsg = 'เกิดข้อผิดพลาดในการลบหลักสูตร';
+                    if (result.error && typeof result.error === 'object') {
+                        errorMsg = result.error.message || errorMsg;
+                    } else if (result.message) {
+                        errorMsg = result.message;
+                    } else if (result.error) {
+                        errorMsg = result.error;
+                    }
+                    throw new Error(errorMsg);
+                }
+            } catch (error) {
+                console.error('❌ Error deleting course:', error);
+                
+                // แสดงข้อผิดพลาดที่เข้าใจง่าย
+                let errorMessage = 'เกิดข้อผิดพลาดในการลบหลักสูตร';
+                
+                if (error.message.includes('HTTP Error')) {
+                    errorMessage += '\n\nสาเหตุ: เซิร์ฟเวอร์ไม่สามารถเชื่อมต่อได้';
+                } else if (error.message.includes('API URL')) {
+                    errorMessage += '\n\nสาเหตุ: ไม่พบการตั้งค่า API';
+                } else {
+                    errorMessage += `\n\nรายละเอียด: ${error.message}`;
+                }
+                
+                alert(errorMessage);
+            }
+        }
+
+        function closeCourseModal() {
+            document.getElementById('courseModal').style.display = 'none';
+        }
+
+        // Handle form submission
+        document.getElementById('courseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const saveBtn = document.getElementById('saveBtn');
+            const originalText = saveBtn.innerHTML;
+            
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังบันทึก...';
+            saveBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(this);
+                const courseData = {
+                    action: 'createCourse',
+                    data: {
+                        id: Date.now().toString(),
+                        code: formData.get('code'),
+                        name: formData.get('name'),
+                        category: 'general',
+                        duration: 0,
+                        description: '',
+                        status: 'active'
+                    }
+                };
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(courseData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    alert('เพิ่มหลักสูตรเรียบร้อยแล้ว');
+                    closeCourseModal();
+                    loadCourses();
+                } else {
+                    throw new Error(result.message || 'เกิดข้อผิดพลาดในการบันทึก');
+                }
+            } catch (error) {
+                console.error('Error saving course:', error);
+                alert('เกิดข้อผิดพลาด: ' + error.message);
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        });
+
+
+        // Handle search
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                displayCourses(allCourses);
+                return;
+            }
+            
+            const filteredCourses = allCourses.filter(course => 
+                course.name.toLowerCase().includes(searchTerm) ||
+                course.code.toLowerCase().includes(searchTerm) ||
+                (course.description && course.description.toLowerCase().includes(searchTerm))
+            );
+            
+            displayCourses(filteredCourses);
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('courseModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCourseModal();
+            }
+        });
+
+        // Start evaluation for a course
+        function startEvaluation(courseCode, courseName) {
+            const currentURL = window.location.origin + window.location.pathname;
+            const baseURL = currentURL.replace('course-management.html', 'obsolete-files/student-evaluation-single.html');
+            const evaluationURL = `${baseURL}?courseId=${encodeURIComponent(courseCode)}&courseName=${encodeURIComponent(courseName)}`;
+            
+            // Open evaluation page
+            window.open(evaluationURL, '_blank');
+        }
+
+        // QR Code functions
+        function showCourseQR(courseCode, courseName) {
+            const currentURL = window.location.origin + window.location.pathname;
+            const baseURL = currentURL.replace('course-management.html', 'obsolete-files/student-evaluation-single.html');
+            const evaluationURL = `${baseURL}?courseId=${encodeURIComponent(courseCode)}`;
+            
+            // Update modal content
+            document.getElementById('qrModalTitle').textContent = `QR Code หลักสูตร ${courseCode}`;
+            document.getElementById('courseInfo').textContent = `${courseCode} - ${courseName}`;
+            document.getElementById('evaluation-url').textContent = evaluationURL;
+            
+            // Generate QR code using QR Server API
+            const qrCodeContainer = document.getElementById('qr-code');
+            const qrSize = 200;
+            const qrURL = `https://api.qrserver.com/v1/create-qr-code/?size=${qrSize}x${qrSize}&data=${encodeURIComponent(evaluationURL)}`;
+            
+            qrCodeContainer.innerHTML = `
+                <img src="${qrURL}" alt="QR Code ${courseCode}" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+            `;
+            
+            // Show modal
+            document.getElementById('qrModal').style.display = 'flex';
+        }
+
+        function closeQRModal() {
+            document.getElementById('qrModal').style.display = 'none';
+        }
+
+        function copyURL() {
+            const urlText = document.getElementById('evaluation-url').textContent;
+            navigator.clipboard.writeText(urlText).then(() => {
+                const copyBtn = event.target.closest('.copy-btn');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> คัดลอกแล้ว!';
+                copyBtn.style.background = '#10b981';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.style.background = '#4f46e5';
+                }, 2000);
+            }).catch(() => {
+                alert('ไม่สามารถคัดลอก URL ได้ กรุณาคัดลอกด้วยตนเอง');
+            });
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'qrModal') {
+                closeQRModal();
+            }
+        });
+
+        // Load courses when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCourses();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+TeachWebsite-Enhanced-Final
+Multi-Course Teaching Evaluation System - Corporate Theme
+========================================================
+
+📁 CLEANED PROJECT STRUCTURE:
+
+🔧 CORE FILES:
+1. google-apps-script.js        - Backend API (74 KB) - Deploy to Google Apps Script
+2. index.html                   - Entry point (redirects to homepage.html) (3.3 KB)
+3. homepage.html                - Main corporate-themed homepage (16.9 KB)
+
+💼 ADMIN INTERFACE:
+4. course-management.html       - Course CRUD operations (30.4 KB)
+
+📚 STUDENT INTERFACE:  
+5. course-selection.html        - Course selection for evaluation (29.1 KB)
+6. student-evaluation.html      - Enhanced evaluation form with visual effects (42.8 KB)
+
+📊 REPORTING:
+7. evaluation-reports.html      - Analytics dashboard (31.6 KB)
+
+📂 ARCHIVE:
+8. obsolete-files/              - Old theme files (preserved for reference)
+   ├── course-management.html   - Old theme version
+   ├── course-selection.html    - Old theme version  
+   ├── evaluation-reports.html  - Old theme version
+   ├── index-simple.html        - Simple theme homepage
+   ├── student-evaluation-single.html - Old single-page evaluation
+   └── test-connection.html     - Testing utility
+
+========================================================
+
+🎯 KEY FEATURES:
+• Corporate blue-purple gradient theme (#4f46e5 to #7c3aed)
+• Multi-course support with dynamic management
+• Real-time Google Sheets synchronization
+• Enhanced student evaluation with visual effects (sparkles, floating animations)
+• Comprehensive analytics and reporting
+• Mobile-responsive design
+• Professional Inter font typography
+
+🔗 NAVIGATION FLOW:
+index.html → homepage.html (main dashboard) → 
+  ├── course-management.html (admin: CRUD operations)
+  ├── course-selection.html → student-evaluation.html (student evaluation path)
+  └── evaluation-reports.html (analytics & reports)
+
+🔧 API INTEGRATION:
+• Single Google Apps Script URL for all operations
+• Consistent API actions: 'createCourse', 'updateCourse', 'deleteCourse', 'submitEvaluation'
+• Auto-creates course-specific sheets: Instructors_{CourseCode}, evaluations_{CourseCode}
+
+📱 RESPONSIVE DESIGN:
+• Desktop-first with mobile breakpoints
+• Touch-friendly interface elements  
+• Optimized for both admin and student workflows
+
+🎨 VISUAL ENHANCEMENTS:
+• Student evaluation includes special effects for engagement
+• Glassmorphism design elements
+• Smooth transitions and hover effects
+• Color-coded rating system
+• Professional corporate appearance
+
+⚙️ DEPLOYMENT:
+1. Deploy google-apps-script.js to Google Apps Script
+2. Update API_URL in all HTML files if needed
+3. Host HTML files on web server or GitHub Pages
+4. Access via index.html (auto-redirects to homepage.html)
+
+📊 GOOGLE SHEETS STRUCTURE:
+• courses - Master course registry
+• Instructors_{CourseCode} - Per-course instructor schedules
+• evaluations_{CourseCode} - Per-course evaluation data
+
+========================================================
+Version: 3.0.0 - CLEANED & ORGANIZED
+Last Updated: September 11, 2025
+Status: ✅ PRODUCTION READY

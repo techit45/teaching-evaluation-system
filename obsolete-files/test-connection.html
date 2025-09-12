@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Google Apps Script Connection</title>
+</head>
+<body>
+    <h1>Test Connection</h1>
+    <button onclick="testConnection()">Test API Connection</button>
+    <div id="result"></div>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzxNwg2M8saVUaxOBvTjzE5WpRPtJ1NIOuy4pKUHSTL3wHMB_tDkxeWIzwBHeQmsg/exec';
+
+        async function testConnection() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Testing...</p>';
+            
+            try {
+                console.log('Testing connection to:', API_URL);
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'health' })
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+                
+                const data = JSON.parse(responseText);
+                console.log('Parsed data:', data);
+                
+                if (data.status === 'success') {
+                    resultDiv.innerHTML = `
+                        <h2 style="color: green;">✅ Connection Successful!</h2>
+                        <p>Status: ${data.status}</p>
+                        <p>Version: ${data.version}</p>
+                        <p>Timestamp: ${data.timestamp}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<h2 style="color: red;">❌ API Error</h2><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                }
+                
+            } catch (error) {
+                console.error('Connection error:', error);
+                resultDiv.innerHTML = `<h2 style="color: red;">❌ Connection Failed</h2><p>${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
