@@ -927,14 +927,14 @@
             const courseId = getUrlParameter('courseId');
             const instructor = getUrlParameter('instructor');
             
-            if (!courseId || !instructor) {
+            if (!courseId) {
                 alert('ข้อมูลไม่สมบูรณ์ กรุณาเลือกหลักสูตรใหม่');
                 window.location.href = 'course-management.html';
                 return;
             }
             
             currentCourseId = courseId;
-            currentInstructor = instructor;
+            currentInstructor = instructor || 'ไม่ระบุผู้สอน';
             
             try {
                 const response = await fetch(API_URL, {
@@ -948,14 +948,20 @@
                 const data = await response.json();
                 
                 if (data.status === 'success' && data.courses) {
-                    const course = data.courses.find(c => c.id == courseId);
+                    // Search by both id and code to handle different courseId formats
+                    const course = data.courses.find(c => 
+                        c.id == courseId || 
+                        c.code == courseId || 
+                        c.id === courseId || 
+                        c.code === courseId
+                    );
                     
                     if (course) {
                         document.getElementById('courseBadge').textContent = course.code;
                         document.getElementById('courseTitle').textContent = course.name;
-                        document.getElementById('instructorName').textContent = instructor;
+                        document.getElementById('instructorName').textContent = currentInstructor;
                         
-                        const initials = instructor.split(' ')
+                        const initials = currentInstructor.split(' ')
                             .map(name => name.charAt(0))
                             .join('')
                             .toUpperCase()
