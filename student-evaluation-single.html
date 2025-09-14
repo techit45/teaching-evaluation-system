@@ -1339,13 +1339,18 @@ function updateInstructor() {
       const instructor1 = matchingRecord.ผู้สอน1 || '';
       const instructor2 = matchingRecord.ผู้สอน2 || '';
       
-      let instructorText = 'วิทยากรหลัก: ' + instructor1;
-      if (instructor2) {
-        instructorText += ` และ ${instructor2}`;
+      // Check if there are any instructors
+      if (!instructor1 && !instructor2) {
+        instructorName.textContent = 'วิทยากรหลัก: ยังไม่ได้กำหนดผู้สอน';
+        console.log('⚠️ No instructors assigned for this schedule');
+      } else {
+        let instructorText = 'วิทยากรหลัก: ' + instructor1;
+        if (instructor2) {
+          instructorText += ` และ ${instructor2}`;
+        }
+        instructorName.textContent = instructorText;
+        console.log('👨‍🏫 Found instructors:', instructorText);
       }
-      
-      instructorName.textContent = instructorText;
-      console.log('👨‍🏫 Found instructors:', instructorText);
     } else {
       instructorName.textContent = 'วิทยากรหลัก: ไม่พบข้อมูลผู้สอน';
       console.log('❌ No instructors found for selected criteria');
