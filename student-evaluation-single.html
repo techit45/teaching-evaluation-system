@@ -984,8 +984,8 @@
             <label for="period">ช่วงเวลาเรียน</label>
             <select id="period" name="period" required>
               <option value="">เลือกช่วงเวลา</option>
-              <option value="08:00-12:00">เช้า (08:00-12:00)</option>
-              <option value="13:00-17:00">บ่าย (13:00-17:00)</option>
+              <option value="เช้า (08:00-12:00)">เช้า (08:00-12:00)</option>
+              <option value="บ่าย (13:00-17:00)">บ่าย (13:00-17:00)</option>
             </select>
           </div>
         </div>
@@ -1308,6 +1308,10 @@ async function loadInstructors() {
 // Update instructor display based on selections
 // Convert time format for matching
 function convertPeriodForMatching(period) {
+  // Handle both format: "เช้า (08:00-12:00)" and "08:00-12:00"
+  if (period.includes('เช้า')) return 'เช้า';
+  if (period.includes('บ่าย')) return 'บ่าย';
+  
   const periodMap = {
     '08:00-12:00': 'เช้า',
     '13:00-17:00': 'บ่าย',
