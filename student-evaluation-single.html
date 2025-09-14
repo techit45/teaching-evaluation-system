@@ -1294,14 +1294,20 @@ async function loadInstructors() {
     
     if (data.status === 'success') {
       instructorsData = data.data.instructors || [];
-      console.log(`✅ Loaded ${instructorsData.length} instructor records`);
+      console.log(`✅ Loaded ${instructorsData.length} instructor records from sheet: ${data.data.sheetName || 'unknown'}`);
       
       // Log sample records to see the data structure and actual content
       console.log('📋 Sample instructor records (first 5):', instructorsData.slice(0, 5));
       
       // Also log records for ลาดกระบัง specifically
       const ladkrabangRecords = instructorsData.filter(r => r.ศูนย์ === 'ลาดกระบัง');
-      console.log(`📍 Records for ลาดกระบัง: ${ladkrabangRecords.length} records`, ladkrabangRecords.slice(0, 3));
+      console.log(`📍 Records for ลาดกระบัง: ${ladkrabangRecords.length} records`);
+      if (ladkrabangRecords.length > 0) {
+        console.log('First ลาดกระบัง record:', ladkrabangRecords[0]);
+        console.log('Specifically week 1, saturday, morning:', 
+          ladkrabangRecords.find(r => r.สัปดาห์ == 1 && r.วัน === 'เสาร์' && r.ช่วงเวลา === 'เช้า')
+        );
+      }
     } else {
       console.error('❌ Failed to load instructors:', data.error);
     }
