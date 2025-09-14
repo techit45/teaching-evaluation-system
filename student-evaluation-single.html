@@ -1272,13 +1272,17 @@ function updateCourseName() {
 // Load instructor data from server
 async function loadInstructors() {
   try {
-    console.log('📚 Loading instructors...');
+    console.log('📚 Loading instructors for course:', courseId || currentCourse?.code || 'DEFAULT');
     
-    const url = courseId 
-      ? `${CONFIG.API_URL}?action=getInstructors&courseId=${courseId}`
-      : `${CONFIG.API_URL}?action=getInstructors`;
-    
-    const response = await fetch(url);
+    // Use POST method with courseId in body for Google Apps Script
+    const response = await fetch(CONFIG.API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ 
+        action: 'getInstructors',
+        courseId: courseId || currentCourse?.code || 'DEFAULT'
+      })
+    });
     
     if (!response.ok) {
       throw new Error(`ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ (${response.status})`);
