@@ -254,6 +254,9 @@ window.addEventListener('error', (event) => {
     }
 });
 
+// Create alias for backward compatibility
+window.CONFIG = window.EVALUATION_SYSTEM_CONFIG;
+
 // Export for modules (if needed)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = window.EVALUATION_SYSTEM_CONFIG;
