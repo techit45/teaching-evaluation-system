@@ -1221,10 +1221,17 @@ async function loadCourseData() {
     });
     
     const data = await response.json();
+    console.log('API Response:', data);
     
-    if (data.status === 'success' && data.courses) {
+    // Check different possible response structures
+    let courses = null;
+    if (data.status === 'success') {
+      courses = data.courses || (data.data && data.data.courses) || [];
+    }
+    
+    if (courses && courses.length > 0) {
       // Search by both id and code to handle different courseId formats
-      currentCourse = data.courses.find(c => 
+      currentCourse = courses.find(c => 
         c.id == courseId || 
         c.code == courseId || 
         c.id === courseId || 
