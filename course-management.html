@@ -1124,8 +1124,8 @@
 
         // Start evaluation for a course
         function startEvaluation(courseCode, courseName) {
-            // Use absolute path for student evaluation single
-            const evaluationURL = `${window.location.origin}/student-evaluation-single.html?courseId=${encodeURIComponent(courseCode)}&courseName=${encodeURIComponent(courseName)}`;
+            // Use absolute path for student evaluation
+            const evaluationURL = `${window.location.origin}/student-evaluation.html?courseId=${encodeURIComponent(courseCode)}&courseName=${encodeURIComponent(courseName)}`;
             
             // Open evaluation page
             window.open(evaluationURL, '_blank');
@@ -1133,8 +1133,8 @@
 
         // QR Code functions
         function showCourseQR(courseCode, courseName) {
-            // Use absolute path for student evaluation single
-            const evaluationURL = `${window.location.origin}/student-evaluation-single.html?courseId=${encodeURIComponent(courseCode)}`;
+            // Use absolute path for student evaluation
+            const evaluationURL = `${window.location.origin}/student-evaluation.html?courseId=${encodeURIComponent(courseCode)}`;
             
             // Update modal content
             document.getElementById('qrModalTitle').textContent = `QR Code หลักสูตร ${courseCode}`;
