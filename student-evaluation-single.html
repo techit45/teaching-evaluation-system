@@ -1274,14 +1274,15 @@ async function loadInstructors() {
   try {
     console.log('📚 Loading instructors for course:', courseId || currentCourse?.code || 'DEFAULT');
     
-    // Use POST method with courseId in body for Google Apps Script
-    const response = await fetch(CONFIG.API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ 
-        action: 'getInstructors',
-        courseId: courseId || currentCourse?.code || 'DEFAULT'
-      })
+    // Use GET method as getInstructors is only available in doGet handler
+    const courseParam = courseId || currentCourse?.code || 'DEFAULT';
+    const url = `${CONFIG.API_URL}?action=getInstructors&courseId=${encodeURIComponent(courseParam)}`;
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: { 
+        'Accept': 'application/json'
+      }
     });
     
     if (!response.ok) {
