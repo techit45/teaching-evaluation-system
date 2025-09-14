@@ -5,7 +5,7 @@
   <title>แบบประเมินการสอน - Single Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <script src="../config.js"></script>
+  <script src="config.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700;800&display=swap');
     
@@ -1152,7 +1152,8 @@ const CONFIG = window.EVALUATION_SYSTEM_CONFIG || {
 // Get course info from URL
 const urlParams = new URLSearchParams(window.location.search);
 const courseId = urlParams.get('courseId');
-const courseName = urlParams.get('courseName') || 'Power Supply';
+let courseName = urlParams.get('courseName') || '';
+let currentCourse = null;
 
 // State variables
 let ratings = {};
@@ -1162,7 +1163,10 @@ let instructorsData = [];
 // Initialize system
 document.addEventListener('DOMContentLoaded', async function() {
   console.log('🎓 Single Page Multi-Course Evaluation System Initialized');
-  console.log('Course:', courseName, 'ID:', courseId);
+  console.log('Course ID:', courseId);
+  
+  // Load course data from API
+  await loadCourseData();
   
   // Update course name in UI
   updateCourseName();
@@ -1198,14 +1202,59 @@ document.addEventListener('DOMContentLoaded', async function() {
   loadDraft();
 });
 
+// Load course data from API
+async function loadCourseData() {
+  if (!courseId) {
+    console.error('No courseId provided');
+    alert('ข้อมูลไม่สมบูรณ์ กรุณาเลือกหลักสูตรใหม่');
+    window.location.href = 'course-management.html';
+    return;
+  }
+  
+  try {
+    const response = await fetch(CONFIG.API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ 
+        action: 'getCourses'
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.status === 'success' && data.courses) {
+      // Search by both id and code to handle different courseId formats
+      currentCourse = data.courses.find(c => 
+        c.id == courseId || 
+        c.code == courseId || 
+        c.id === courseId || 
+        c.code === courseId
+      );
+      
+      if (currentCourse) {
+        courseName = currentCourse.name;
+        console.log('Found course:', currentCourse);
+      } else {
+        throw new Error('ไม่พบข้อมูลหลักสูตร');
+      }
+    } else {
+      throw new Error('ไม่สามารถโหลดข้อมูลได้');
+    }
+  } catch (error) {
+    console.error('Error loading course data:', error);
+    alert('เกิดข้อผิดพลาดในการโหลดข้อมูล: ' + error.message);
+    window.location.href = 'course-management.html';
+  }
+}
+
 // Update course name in all UI elements
 function updateCourseName() {
-  document.getElementById('course-name').textContent = courseName;
-  document.querySelector('title').textContent = `แบบประเมินการสอน - ${courseName}`;
+  document.getElementById('course-name').textContent = courseName || 'ไม่ระบุหลักสูตร';
+  document.querySelector('title').textContent = `แบบประเมินการสอน - ${courseName || 'ไม่ระบุหลักสูตร'}`;
   
   // Update all course name placeholders
   document.querySelectorAll('.course-name-text').forEach(el => {
-    el.textContent = courseName;
+    el.textContent = courseName || 'ไม่ระบุหลักสูตร';
   });
   
   // Update comment placeholder
