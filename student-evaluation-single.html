@@ -1290,6 +1290,13 @@ async function loadInstructors() {
     if (data.status === 'success') {
       instructorsData = data.data.instructors || [];
       console.log(`✅ Loaded ${instructorsData.length} instructor records`);
+      
+      // Log sample records to see the data structure and actual content
+      console.log('📋 Sample instructor records (first 5):', instructorsData.slice(0, 5));
+      
+      // Also log records for ลาดกระบัง specifically
+      const ladkrabangRecords = instructorsData.filter(r => r.ศูนย์ === 'ลาดกระบัง');
+      console.log(`📍 Records for ลาดกระบัง: ${ladkrabangRecords.length} records`, ladkrabangRecords.slice(0, 3));
     } else {
       console.error('❌ Failed to load instructors:', data.error);
     }
@@ -1333,11 +1340,27 @@ function updateInstructor() {
     );
     
     console.log('📊 Available instructor records:', instructorsData.length);
-    console.log('🎯 Matching record found:', matchingRecord);
+    
+    // Log all records that match the criteria for debugging
+    const allMatchingRecords = instructorsData.filter(record => 
+      record.ศูนย์ === center &&
+      record.สัปดาห์ == week &&
+      record.วัน === day &&
+      record.ช่วงเวลา === periodForMatching
+    );
+    
+    console.log('🔍 All matching records for this criteria:', allMatchingRecords);
+    console.log('🎯 Using first matching record:', matchingRecord);
     
     if (matchingRecord) {
       const instructor1 = matchingRecord.ผู้สอน1 || '';
       const instructor2 = matchingRecord.ผู้สอน2 || '';
+      
+      console.log('📝 Instructor data:', {
+        'ผู้สอน1': instructor1 || '(empty)',
+        'ผู้สอน2': instructor2 || '(empty)',
+        'raw_record': matchingRecord
+      });
       
       // Check if there are any instructors
       if (!instructor1 && !instructor2) {
