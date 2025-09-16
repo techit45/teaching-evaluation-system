@@ -1615,6 +1615,15 @@ function validateForm() {
 
 // Collect form data
 function collectFormData() {
+  // Get period value and convert to simple format for API
+  let periodValue = document.getElementById('period').value;
+  // Convert "เช้า (08:00-12:00)" to just "เช้า" for API validation
+  if (periodValue.includes('เช้า')) {
+    periodValue = 'เช้า';
+  } else if (periodValue.includes('บ่าย')) {
+    periodValue = 'บ่าย';
+  }
+  
   return {
     timestamp: new Date().toISOString(),
     course: {
@@ -1625,7 +1634,7 @@ function collectFormData() {
     center: document.getElementById('center').value,
     week: document.getElementById('week').value,
     day: document.getElementById('day').value,
-    period: document.getElementById('period').value,
+    period: periodValue,
     instructor: document.getElementById('instructorName').textContent,
     ratings: ratings,
     comments: document.getElementById('comment').value || ''
