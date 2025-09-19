@@ -671,21 +671,25 @@ function validateCourseData(courseData) {
   if (!courseData.code || courseData.code.trim() === '') {
     errors.push('Course code is required');
   } else {
-    const codeRegex = /^[A-Za-z0-9]{2,10}$/;
-    if (!codeRegex.test(courseData.code.trim())) {
-      errors.push('Course code must be 2-10 characters, letters and numbers only');
+    // อนุญาตให้ใช้ภาษาไทย, ภาษาอังกฤษ, ตัวเลข และอักขระพิเศษ . , - / :
+    const trimmedCode = courseData.code.trim();
+    if (trimmedCode.length < 2 || trimmedCode.length > 50) {
+      errors.push('รหัสหลักสูตรต้องมีความยาว 2-50 ตัวอักษร');
     }
+    // ไม่ต้องตรวจสอบ pattern เพื่อให้รองรับทุกภาษาและอักขระพิเศษ
   }
   
   if (!courseData.name || courseData.name.trim() === '') {
-    errors.push('Course name is required');
+    errors.push('ชื่อหลักสูตรจำเป็นต้องกรอก');
   } else {
-    if (courseData.name.trim().length < 3) {
-      errors.push('Course name must be at least 3 characters');
+    const trimmedName = courseData.name.trim();
+    if (trimmedName.length < 2) {
+      errors.push('ชื่อหลักสูตรต้องมีอย่างน้อย 2 ตัวอักษร');
     }
-    if (courseData.name.trim().length > 200) {
-      errors.push('Course name must not exceed 200 characters');
+    if (trimmedName.length > 200) {
+      errors.push('ชื่อหลักสูตรต้องไม่เกิน 200 ตัวอักษร');
     }
+    // รองรับทุกภาษาและอักขระพิเศษ รวมถึง . , - / :
   }
   
   // Optional field validations
@@ -701,9 +705,9 @@ function validateCourseData(courseData) {
   }
   
   if (courseData.category) {
-    const validCategories = ['junior', 'senior'];
+    const validCategories = ['other', 'programming', 'electronics', 'mechanical', 'junior', 'senior'];
     if (!validCategories.includes(courseData.category)) {
-      errors.push('Invalid category. Must be one of: ' + validCategories.join(', '));
+      errors.push('ระดับชั้นไม่ถูกต้อง ต้องเป็นหนึ่งใน: ' + validCategories.join(', '));
     }
   }
   

@@ -3,7 +3,7 @@
 
 window.EVALUATION_SYSTEM_CONFIG = {
     // API Configuration
-    API_URL: 'https://script.google.com/macros/s/AKfycbzxNwg2M8saVUaxOBvTjzE5WpRPtJ1NIOuy4pKUHSTL3wHMB_tDkxeWIzwBHeQmsg/exec',
+    API_URL: 'https://script.google.com/macros/s/AKfycbyDsRhqstfIuLPVhQdVo0Pkh-tXBj3-_6VZ-gA7UB1C-2v7DBUCiDTE358m3v1ojA/exec',
     
     // System Settings
     VERSION: '3.0.0',
@@ -19,9 +19,10 @@ window.EVALUATION_SYSTEM_CONFIG = {
     TOAST_DURATION: 5000, // 5 seconds
     ANIMATION_DURATION: 300, // milliseconds
     
-    // Validation Rules
-    COURSE_CODE_PATTERN: /^[A-Za-z0-9]{2,10}$/,
-    COURSE_NAME_MIN_LENGTH: 3,
+    // Validation Rules - รองรับภาษาไทยและอักขระพิเศษ
+    COURSE_CODE_MIN_LENGTH: 2,
+    COURSE_CODE_MAX_LENGTH: 50,
+    COURSE_NAME_MIN_LENGTH: 2,
     COURSE_NAME_MAX_LENGTH: 200,
     COMMENT_MAX_LENGTH: 1000,
     
@@ -180,23 +181,25 @@ window.EvaluationUtils = {
         return icons[type] || icons.info;
     },
     
-    // Validate course data
+    // Validate course data - รองรับภาษาไทยและอักขระพิเศษ
     validateCourseData(data) {
         const config = window.EVALUATION_SYSTEM_CONFIG;
         const errors = [];
-        
-        if (!data.code || !config.COURSE_CODE_PATTERN.test(data.code)) {
-            errors.push('รหัสหลักสูตรต้องเป็นตัวอักษรหและตัวเลข 2-10 ตัว');
+
+        // ตรวจสอบรหัสหลักสูตร - รองรับทุกภาษาและอักขระพิเศษ
+        if (!data.code || data.code.trim().length < config.COURSE_CODE_MIN_LENGTH || data.code.trim().length > config.COURSE_CODE_MAX_LENGTH) {
+            errors.push(`รหัสหลักสูตรต้องมีความยาว ${config.COURSE_CODE_MIN_LENGTH}-${config.COURSE_CODE_MAX_LENGTH} ตัวอักษร`);
         }
-        
-        if (!data.name || data.name.length < config.COURSE_NAME_MIN_LENGTH) {
+
+        // ตรวจสอบชื่อหลักสูตร
+        if (!data.name || data.name.trim().length < config.COURSE_NAME_MIN_LENGTH) {
             errors.push(`ชื่อหลักสูตรต้องมีอย่างน้อย ${config.COURSE_NAME_MIN_LENGTH} ตัวอักษร`);
         }
-        
-        if (data.name && data.name.length > config.COURSE_NAME_MAX_LENGTH) {
+
+        if (data.name && data.name.trim().length > config.COURSE_NAME_MAX_LENGTH) {
             errors.push(`ชื่อหลักสูตรต้องไม่เกิน ${config.COURSE_NAME_MAX_LENGTH} ตัวอักษร`);
         }
-        
+
         return {
             isValid: errors.length === 0,
             errors
